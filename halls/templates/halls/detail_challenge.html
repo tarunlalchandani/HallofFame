@@ -1,0 +1,24 @@
+{%extends 'halls/base.html'%}
+{% block content %}
+<div class="album py-5 bg-light">
+<div class="container">
+<div class="row">
+  <div class="col-md-4">
+  <h3> {{ challenge.title }}</h3>
+
+  <img src="{{ challenge.icon.url }}" class="img-fluid" alt="Responsive image"/>
+  </div>
+  <div class="col-md-8">
+    <br/>
+    <br/>
+    <br/>
+    <p>{{ challenge.body }}</p>
+    <br/>
+    <p>Publication Date: {{challenge.pub_date}} <b> Deadline Date: {{challenge.deadline_date}} </b></p>
+    <br/>
+    <p>Challenge Material: <a href="{{url}}">{{challenge.url}}</a> </p>
+  </div>
+</div>
+</div>
+</div>
+{% endblock %}

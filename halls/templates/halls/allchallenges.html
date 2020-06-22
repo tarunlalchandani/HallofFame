@@ -1,0 +1,73 @@
+{%extends 'halls/base.html'%}
+{% block content %}
+<style>
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px; /* 5px rounded corners */
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+.container {
+  padding: 2px 16px;
+}
+
+
+/* Add rounded corners to the top left and the top right corner of the image */
+img {
+  border-radius: 5px 5px 0 0;
+}
+</style>
+<div class = "container">
+  <main role="main">
+    <div class="container">
+    <h1 class="text-center pt-3">All Available Challenges</h1>
+    <br/>
+    <br/>
+    <h2> Choose a Challenge </h2>
+    </div>
+    <hr/>
+    <div class="card">
+      <div class="container">
+
+
+
+
+          {% for challenge in challenges.all %}
+          <div class="card">
+            <div class="row">
+              <div class="col-sm-4" >
+              <a href = "{% url 'detail_challenge' challenge.id %}"><h5 class="card-header"> {{ challenge.title }}</h5></a>
+              <br/>
+              <img src="{{ challenge.icon.url }}" alt="Avatar" height ="100" width="200" class="img-fluid" alt="Responsive image"/>
+              </div>
+              <div class="col-sm-8">
+              <div class="card-body">
+                  <h5 class="card-title">Publication Date: {{challenge.pub_date}}<b> Deadline Date: {{challenge.deadline_date}} </b></h5>
+                  <p class="card-text">{{ challenge.summary }}</p>
+                </div>
+             </div>
+           </div>
+           </div>
+           <br/>
+           <br/>
+          <!--<div class="container">
+
+
+              <img class = "card-image-top" src = "{{ category.image.url }}" height = "100" width = "100" class="img-fluid" alt="Responsive image"/>
+              <div class="card-body">
+              <p class="card-text">{{ category.summary }}</p>
+
+
+          </div>-->
+
+          {% endfor %}
+
+  </main>
+</div>
+{% endblock %}

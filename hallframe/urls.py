@@ -23,11 +23,24 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home, name='home'),
+    path('dashboard',views.dashboard, name='dashboard'),
     # AUTH
     path('signup', views.SignUp.as_view(), name="signup"),
     path('login', auth_views.LoginView.as_view(), name="login"),
     path('logout', auth_views.LogoutView.as_view(), name="logout"),
     #Halls
-    path('halloffame/create', views.CreateHall.as_view(),name='create_hall')
+    path('halloffame/create', views.CreateHall.as_view(),name='create_hall'),
+    path('halloffame/',views.allcategories, name='allcategories'),
+    path('halloffame/<int:pk>', views.DetailHall.as_view(),name='detail_hall'),
+    path('halloffame/<int:pk>/update', views.UpdateHall.as_view(),name='update_hall'),
+    path('halloffame/<int:pk>/delete', views.DeleteHall.as_view(),name='delete_hall'),
+    path('halloffame/createchallenge', views.CreateChallenge.as_view(),name='create_challenge'),
+    path('halloffame/challenges/',views.allchallenges, name='allchallenges'),
+    path('halloffame/challenges/<int:pk>', views.DetailChallenge.as_view(),name='detail_challenge'),
+    path('halloffame/challenges/<int:pk>/update', views.UpdateChallenge.as_view(),name='update_challenge'),
+    path('halloffame/challenges/<int:pk>/delete', views.DeleteChallenge.as_view(),name='delete_challenge'),
+    #Video
+    path('halloffame/<int:pk>/addvideo', views.add_video, name = 'add_video'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
