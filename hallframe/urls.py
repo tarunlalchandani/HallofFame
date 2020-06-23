@@ -19,6 +19,8 @@ from django.urls import path
 from halls import views
 from django.conf.urls.static import static
 from django.conf import settings
+#from django.views.i18n import JavaScriptCatalog
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,13 +36,22 @@ urlpatterns = [
     path('halloffame/<int:pk>', views.DetailHall.as_view(),name='detail_hall'),
     path('halloffame/<int:pk>/update', views.UpdateHall.as_view(),name='update_hall'),
     path('halloffame/<int:pk>/delete', views.DeleteHall.as_view(),name='delete_hall'),
+    #challenges
     path('halloffame/createchallenge', views.CreateChallenge.as_view(),name='create_challenge'),
     path('halloffame/challenges/',views.allchallenges, name='allchallenges'),
-    path('halloffame/challenges/<int:pk>', views.DetailChallenge.as_view(),name='detail_challenge'),
-    path('halloffame/challenges/<int:pk>/update', views.UpdateChallenge.as_view(),name='update_challenge'),
-    path('halloffame/challenges/<int:pk>/delete', views.DeleteChallenge.as_view(),name='delete_challenge'),
+    path('halloffame/challenges/gg/<int:pk>', views.DetailChallenge.as_view(),name='detail_challenge'),
+    path('halloffame/challenges/gg/<int:pk>/update', views.UpdateChallenge.as_view(),name='update_challenge'),
+    path('halloffame/challenges/gg/<int:pk>/delete', views.DeleteChallenge.as_view(),name='delete_challenge'),
     #Video
     path('halloffame/<int:pk>/addvideo', views.add_video, name = 'add_video'),
+    #files for challenge
+    path('halloffame/addfile',views.AddFile.as_view(), name = 'add_file'),
+    path('halloffame/challenges/gg/files/',views.allfiles, name='allfiles'),
+    path('halloffame/challenges/gg/files/<int:pk>',views.DetailFile.as_view(),name='detail_file'),
+    path('halloffame/challenges/gg/files/<int:pk>/update',views.UpdateFile.as_view(),name='update_file'),
+    path('halloffame/challenges/gg/files/<int:pk>/delete',views.DeleteFile.as_view(),name='delete_file'),
+
+    #path('jsi18n', JavaScriptCatalog.as_view(),name='js-catlog')
 ]
 urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

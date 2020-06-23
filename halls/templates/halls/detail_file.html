@@ -1,0 +1,22 @@
+{%extends 'halls/base.html'%}
+{% block content %}
+<div class="album py-5 bg-light">
+<div class="container">
+<div class="row">
+  <div class="col-md-4">
+  <h3> {{ file.title }}</h3>
+
+
+  </div>
+  <div class="col-md-8">
+
+    <br/>
+    <p>Publication Date: {{file.pub_date}}</p>
+    <p> <b> Deadline Date: {{file.delete_by}} </b></p>
+    <br/>
+    <p><a href="{{file.attachment.url}}"> Download Here </a> </p>
+  </div>
+</div>
+</div>
+</div>
+{% endblock %}

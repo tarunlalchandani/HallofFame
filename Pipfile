@@ -9,6 +9,10 @@ verify_ssl = true
 django = "*"
 django-allauth = "*"
 pillow = "*"
+django-widget-tweaks = "*"
+django-bootstrap4 = "*"
+django-bootstrap-datepicker-plus = "*"
+django-forms-bootstrap = "*"
 
 [requires]
 python_version = "3.8"

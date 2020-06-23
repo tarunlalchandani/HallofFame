@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "aa8771ad97c6df92084b2db8bd4018bb3b6d7beef3742d22a9e09a1995b4895a"
+            "sha256": "8e39d2c772fb38d431677e9bb4c509001631517f45a14d6c8f5d7c2f05f7900c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,6 +23,14 @@
             ],
             "markers": "python_version >= '3.5'",
             "version": "==3.2.10"
+        },
+        "beautifulsoup4": {
+            "hashes": [
+                "sha256:73cc4d115b96f79c7d77c1c7f7a0a8d4c57860d1041df407dd1aae7f07a77fd7",
+                "sha256:a6237df3c32ccfaee4fd201c8f5f9d9df619b93121d01353a64a73ce8c6ef9a8",
+                "sha256:e718f2342e2e099b640a34ab782407b7b676f47ee272d6739e60b8ea23829f2c"
+            ],
+            "version": "==4.9.1"
         },
         "certifi": {
             "hashes": [
@@ -60,6 +68,38 @@
             ],
             "index": "pypi",
             "version": "==0.42.0"
+        },
+        "django-bootstrap-datepicker-plus": {
+            "hashes": [
+                "sha256:490058eba99d47f48a7d24fa78581c0e36375bdc7aa9605783eeb170d51fd0df",
+                "sha256:a8bc19cc6846f97ff1e6c447f4e0387881d16e8afa1e8bd7a652c19e545c566b"
+            ],
+            "index": "pypi",
+            "version": "==3.0.5"
+        },
+        "django-bootstrap4": {
+            "hashes": [
+                "sha256:69a68ecf8d6526c33b4c79b51ac07f3a55d3740c9a126171325133108590fff8",
+                "sha256:b0236cdba9b64f03889cd2555c35586ab645a75260b088429ca98a47e80ef798"
+            ],
+            "index": "pypi",
+            "version": "==2.1.1"
+        },
+        "django-forms-bootstrap": {
+            "hashes": [
+                "sha256:50d69baf6c6f262f6ae3651096b52c31552cb75d37493f0c917ce2c16d13f0d9",
+                "sha256:ffc6d2b9fba03e2366884e82f613daf1284702e9346746e0e9de299db8138d6f"
+            ],
+            "index": "pypi",
+            "version": "==3.1.0"
+        },
+        "django-widget-tweaks": {
+            "hashes": [
+                "sha256:9f91ca4217199b7671971d3c1f323a2bec71a0c27dec6260b3c006fa541bc489",
+                "sha256:f80bff4a8a59b278bb277a405a76a8b9a884e4bae7a6c70e78a39c626cd1c836"
+            ],
+            "index": "pypi",
+            "version": "==1.4.8"
         },
         "idna": {
             "hashes": [
@@ -135,6 +175,14 @@
                 "sha256:fa6c47b933f01060936d87ae9327fead68768b69c6c9ea2109c48be30f2d4dbc"
             ],
             "version": "==1.3.0"
+        },
+        "soupsieve": {
+            "hashes": [
+                "sha256:1634eea42ab371d3d346309b93df7870a88610f0725d47528be902a0d95ecc55",
+                "sha256:a59dc181727e95d25f781f0eb4fd1825ff45590ec8ff49eadfd7f1a537cc0232"
+            ],
+            "markers": "python_version >= '3.5'",
+            "version": "==2.0.1"
         },
         "sqlparse": {
             "hashes": [

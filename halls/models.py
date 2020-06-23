@@ -44,6 +44,19 @@ class Challenge(models.Model):
     def pub_date_pretty(self):
         return self.pub.date.strftime('%b %e %Y')
 
+class File(models.Model):
+    title = models.CharField(max_length=255)
+    pub_date = models.DateTimeField()
+    delete_by = models.DateTimeField()
+    attachment = models.FileField(upload_to = 'files/')
+    challenge = models.ForeignKey(Challenge, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.title
+
+    def pub_date_pretty(self):
+        return self.pub.date.strftime('%b %e %Y')
+
 class Video(models.Model):
     title = models.CharField(max_length=255)
     url = models.URLField()

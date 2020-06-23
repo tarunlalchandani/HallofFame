@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'halls',
     'allauth', # new
     'allauth.account', # new
+    'widget_tweaks',
+    'bootstrap4',
+
+    'bootstrap_datepicker_plus',
 ]
 
 MIDDLEWARE = [

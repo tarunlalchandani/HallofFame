@@ -26,10 +26,10 @@ img {
 <div class = "container">
   <main role="main">
     <div class="container">
-    <h1 class="text-center pt-3">All Available Challenges</h1>
+    <h1 class="text-center pt-3">All Available Files</h1>
     <br/>
     <br/>
-    <h2> Choose a Challenge </h2>
+    <h2> Choose a file </h2>
     </div>
     <hr/>
     <div class="card">
@@ -38,21 +38,19 @@ img {
 
 
 
-          {% for challenge in challenges.all %}
+          {% for f in files.all %}
           <div class="card">
             <div class="row">
               <div class="col-sm-4" >
-              <a href = "{% url 'detail_challenge' challenge.id %}"><h5 class="card-header"> {{ challenge.title }}</h5></a>
+              <a href = "{% url 'detail_file' f.id %}"><h5 class="card-header"> {{ f.title }}</h5></a>
               <br/>
-              <img src="{{ challenge.icon.url }}" alt="Avatar" height ="100" width="200" class="img-fluid" alt="Responsive image"/>
               </div>
               <div class="col-sm-8">
               <div class="card-body">
-                  <h5 class="card-title">Publication Date: {{challenge.pub_date}}</h5>
-                  <h5><b> Deadline Date: {{challenge.deadline_date}} </b></h5>
-                  <br/>
-                  <h6 class="card-title"><i>Category: {{challenge.hall}}</i></h6>
-                  <p class="card-text">{{ challenge.summary }}</p>
+                  <h5 class="card-title">Publication Date: {{f.pub_date}}</h5>
+                  <h5><b> Deadline Date: {{f.deadline_date}} </b></h5>
+                  <h6 class="card-title"><i>Challenge: {{f.challenge}}</i></h6>
+                  <p class="card-text">  <a href="{{ f.attachment.url }}"><p>Download File here </p></a></p>
                 </div>
              </div>
            </div>
