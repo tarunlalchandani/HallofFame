@@ -1,0 +1,88 @@
+{%extends 'halls/base.html'%}
+{% block content %}
+<style>
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px; /* 5px rounded corners */
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+.container {
+  padding: 2px 16px;
+}
+
+
+/* Add rounded corners to the top left and the top right corner of the image */
+img {
+  border-radius: 5px 5px 0 0;
+}
+</style>
+<div class = "container">
+  <main role="main">
+    <div class="album py-5 bg-light">
+    <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+      <h3>{{ challenge.title }}</h3>
+
+      <img src="{{ challenge.icon.url }}" height ='100' width ='300'class="img-fluid" alt="Responsive image"/>
+      </div>
+      <div class="col-md-8">
+        <br/>
+        <br/>
+        <p>{{ challenge.body }}</p>
+        <p>Publication Date: {{challenge.pub_date}}</p>
+        <p><b> Deadline Date: {{challenge.deadline_date}} </b></p>
+
+      </div>
+    </div>
+    </div>
+    </div>
+
+
+    <div class="container">
+    <h3 class="text-center pt-3">All Available Files</h3>
+    <a href="{% url 'add_file' pk=challenge.pk  %}" class ='btn btn-primary' ">AddFile</a>
+    <br/>
+    <br/>
+    <h4> Choose a file </h4>
+    </div>
+    <hr/>
+
+
+
+<div class="row">
+{% for f in files.all %}
+
+   <div class="col-lg-2 col-sm-3 mb-2" style="margin-top: 2%">
+       <div class="card shadow border-0 h-100">
+           <div class="card-body">
+               <h5 class="my-2"><a href="{{ f.attachment.url }}">{{ f.title }}</a></h5>
+
+               <a href="{% url 'delete_file' f.id %}" style="margin-bottom: 2%" class ='btn btn-danger' ">Delete</a>
+               <a href="{% url 'update_file' f.id %}" class ='btn btn-success' ">Update</a>
+
+           </div>
+       </div>
+   </div>
+
+{% if forloop.counter|divisibleby:6 %}
+
+</div><!-- close existing row and open another one-->
+<div class="row">
+{% endif %}
+{% endfor %}
+</div>
+
+
+
+
+</main>
+</div>
+{% endblock %}

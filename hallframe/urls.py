@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home, name='home'),
     path('dashboard',views.dashboard, name='dashboard'),
+    path('edashboard',views.edashboard, name='edashboard'),
     # AUTH
     path('signup', views.SignUp.as_view(), name="signup"),
     path('login', auth_views.LoginView.as_view(), name="login"),
@@ -34,18 +35,21 @@ urlpatterns = [
     path('halloffame/create', views.CreateHall.as_view(),name='create_hall'),
     path('halloffame/',views.allcategories, name='allcategories'),
     path('halloffame/<int:pk>', views.DetailHall.as_view(),name='detail_hall'),
-    path('halloffame/<int:pk>/update', views.UpdateHall.as_view(),name='update_hall'),
+    path('halloffame/<hall>/update', views.UpdateHall.as_view(),name='update_hall'),
     path('halloffame/<int:pk>/delete', views.DeleteHall.as_view(),name='delete_hall'),
     #challenges
-    path('halloffame/createchallenge', views.CreateChallenge.as_view(),name='create_challenge'),
+    path('halloffame/createchallenge/<int:pk>/', views.CreateChallenge.as_view(),name='create_challenge'),
     path('halloffame/challenges/',views.allchallenges, name='allchallenges'),
-    path('halloffame/challenges/gg/<int:pk>', views.DetailChallenge.as_view(),name='detail_challenge'),
+
     path('halloffame/challenges/gg/<int:pk>/update', views.UpdateChallenge.as_view(),name='update_challenge'),
     path('halloffame/challenges/gg/<int:pk>/delete', views.DeleteChallenge.as_view(),name='delete_challenge'),
-    #Video
-    path('halloffame/<int:pk>/addvideo', views.add_video, name = 'add_video'),
+    path('halloffame/<int:cpk>/challenges/gg/<int:pk>', views.DetailChallenge.as_view(),name='detail_challenge'),
+    #Collecting Challenges for a particular Category
+    path('halloffame/<int:pk>/challenges', views.seechallenges, name='seechallenges'),
+    #Collecting Files for a particular challenge{% url 'seefiles' challenge.id %}
+    path('halloffame/challenges/gg/<int:pk>/files',views.seefiles, name='seefiles'),
     #files for challenge
-    path('halloffame/addfile',views.AddFile.as_view(), name = 'add_file'),
+    path('halloffame/addfile/<int:pk>',views.AddFile.as_view(), name = 'add_file'),
     path('halloffame/challenges/gg/files/',views.allfiles, name='allfiles'),
     path('halloffame/challenges/gg/files/<int:pk>',views.DetailFile.as_view(),name='detail_file'),
     path('halloffame/challenges/gg/files/<int:pk>/update',views.UpdateFile.as_view(),name='update_file'),

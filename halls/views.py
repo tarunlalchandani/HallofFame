@@ -3,22 +3,31 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate, login
-from .models import Hall, Video, File
+from .models import Hall, File
 from .models import Challenge
 from .models import CustomUser
 from .forms import CustomUserCreationForm
-from .forms import VideoForm, SearchForm, CreateHallForm, CreateChallengeForm, AddFileForm
+from .forms import  SearchForm, CreateHallForm, CreateChallengeForm, AddFileForm
 from django.forms import formset_factory
 from bootstrap_datepicker_plus import DateTimePickerInput
+from django.http import Http404
+import urllib
+from django.forms.utils import ErrorList
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
 
 
 def home(request):
     return render(request,'halls/home.html')
 
+
 def allcategories(request):
     categories = Hall.objects
     return render(request,'halls/allcategories.html',{'categories':categories})
 
+@login_required
 def allfiles(request):
     files = File.objects
     return render(request,'halls/allfiles.html',{'files':files})
@@ -27,25 +36,26 @@ def allchallenges(request):
     challenges = Challenge.objects
     return render(request,'halls/allchallenges.html',{'challenges':challenges})
 
+@login_required
+def edashboard(request):
+    halls = Hall.objects.all() #afterwards for user to filter challenges use halls = Hall.objects.filter(user=request,user)
+    return render(request, 'halls/edashboard.html',{'halls':halls})
+
+@login_required
 def dashboard(request):
-    return render(request,'halls/dashboard.html')
+    return render(request,'halls/edashboard.html')
 
-def add_video(request, pk):
-    #VideoFormSet = formset_factory(VideoForm, extra=5)
-    form = VideoForm()
-    search_form = SearchForm()
 
-    if request.method == 'POST':
-        #Create
-        filled_form = VideoFormSet(request.POST)
-        if filled_form.is_valid():
-            video = Video()
-            video.url = filled_form.cleaned_data['url']
-            video.title = filled_form.cleaned_data['title']
-            video.youtube_id = filled_form.cleaned_data['youtube_id']
-            video.hall = Hall.objects.get(pk = pk)
-            video.save()
-    return render(request, 'halls/add_video.html', {'form':form, 'search_form':search_form})
+def seechallenges(request, pk):
+    hall = Hall.objects.get(id = pk)
+    challenges = hall.challenge_set.all()
+    return render(request, 'halls/seechallenges.html',{'problems':challenges,'hall':hall})
+
+@login_required
+def seefiles(request, pk):
+     challenge = Challenge.objects.get(id = pk)
+     files = challenge.file_set.all()
+     return render(request, 'halls/seefiles.html',{'files':files,'challenge':challenge})
 
 class SignUp(generic.CreateView):
     form_class = CustomUserCreationForm
@@ -65,118 +75,145 @@ class Login(generic.CreateView):
     success_url = reverse_lazy('home')
     template_name = 'registration/login.html'
 
-class CreateHall(generic.CreateView):
+class CreateHall(LoginRequiredMixin,generic.CreateView):
     form_class = CreateHallForm
     model =  Hall
     #fields = ['title','image', 'body']
     template_name = 'halls/create_hall.html'
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('edashboard')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         #super of class is generic CreateView
         super(CreateHall, self).form_valid(form)
         form.save()
-        return redirect('dashboard')
+        return redirect('edashboard')
 
 class DetailHall(generic.DetailView):
     model = Hall
     template_name = 'halls/detail_hall.html'
 
-class UpdateHall(generic.UpdateView):
+class UpdateHall(LoginRequiredMixin,generic.UpdateView):
     model = Hall
     template_name = 'halls/update_hall.html'
     fields = ['title','image','body']
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('edashboard')
 
-class DeleteHall(generic.UpdateView):
+    def get_object(self):#this does not works with create and detail
+        hall = super(UpdateHall, self).get_object()
+        if not hall.user == self.request.user:
+            raise Http404
+        return hall
+
+class DeleteHall(LoginRequiredMixin, generic.UpdateView):
     model = Hall
     template_name = 'halls/delete_hall.html'
     fields = ['title','image','body']
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('edashboard')
 
-class AddFile(generic.CreateView):
+    def get_object(self):#this does not works with create and detail
+        hall = super(UpdateHall, self).get_object()
+        if not hall.user == self.request.user:
+            raise Http404
+        return hall
+
+class AddFile(LoginRequiredMixin,generic.CreateView):
     form_class = AddFileForm
     model =  File
     template_name = 'halls/add_file.html'
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('seefiles')
 
     def get_form(self):
         form = super().get_form()
-        form.fields['pub_date'].widget = DateTimePickerInput()
-        form.fields['delete_by'].widget = DateTimePickerInput()
+        #form.fields['pub_date'].widget = DateTimePickerInput()
+        #form.fields['delete_by'].widget = DateTimePickerInput()
         return form
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        form.instance.challenge_id = self.kwargs['pk']
         #super of class is generic CreateView
         super(AddFile, self).form_valid(form)
         form.save()
-        return redirect('dashboard')
+        return redirect('allfiles')
 
 
 
 
-class UpdateFile(generic.UpdateView):
+class UpdateFile(LoginRequiredMixin,generic.UpdateView):
     form_class = AddFileForm
     model = File
     template_name = 'halls/update_file.html'
 #    fields = ['title','pub_date', 'delete_by','attachment','challenge']
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('allfiles')
 
     def get_form(self):
         form = super().get_form()
-        form.fields['pub_date'].widget = DateTimePickerInput()
-        form.fields['delete_by'].widget = DateTimePickerInput()
+        #form.fields['pub_date'].widget = DateTimePickerInput()
+        #form.fields['delete_by'].widget = DateTimePickerInput()
         return form
 
-class DeleteFile(generic.UpdateView):
+    def get_object(self):
+        file = super(UpdateFile, self).get_object()
+        if not file.challenge.hall.user == self.request.user:
+            raise Http404
+        return file
+
+class DeleteFile(LoginRequiredMixin,generic.UpdateView):
     form_class = AddFileForm
     model = File
     template_name = 'halls/delete_file.html'
     #fields = ['title','pub_date', 'delete_by','attachment','challenge']
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('allfiles')
 
     def get_form(self):
         form = super().get_form()
-        form.fields['pub_date'].widget = DateTimePickerInput()
-        form.fields['delete_by'].widget = DateTimePickerInput()
+        #form.fields['pub_date'].widget = DateTimePickerInput()
+        #form.fields['delete_by'].widget = DateTimePickerInput()
         return form
 
-class DetailFile(generic.DetailView):
+    def get_object(self):
+        file = super(DeleteFile, self).get_object()
+        if not file.challenge.hall.user == self.request.user:
+            raise Http404
+        return file
+
+class DetailFile(LoginRequiredMixin,generic.DetailView):
     model = File
     template_name = 'halls/detail_file.html'
 
-class CreateChallenge(generic.CreateView):
+class CreateChallenge(LoginRequiredMixin,generic.CreateView):
     form_class = CreateChallengeForm
     model =  Challenge
-    #fields = ['title','url', 'pub_date', 'deadline_date', 'icon', 'body']
     template_name = 'halls/create_challenge.html'
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('allchallenges')
 
-    # #def get_form(self):
-    #     form = super().get_form()
-    #     form.fields['pub_date'].widget = DateTimePickerInput()
-    #     form.fields['deadline_date'].widget = DateTimePickerInput()
+    # def create_form(self, *args, **kwargs):
+    #     form = super(CreateChallenge, self).create_form(*args, **kwargs)
+    #     form.instance.user = self.request.user
+    #     form.instance.hall_id = self.kwargs['pk']
     #     return form
+
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        form.instance.hall_id = self.kwargs['pk']
         #super of class is generic CreateView
         super(CreateChallenge, self).form_valid(form)
         form.save()
-        return redirect('dashboard')
+        return redirect('allchallenges')
 
-class DetailChallenge(generic.DetailView):
+
+class DetailChallenge(LoginRequiredMixin,generic.DetailView):
     model = Challenge
     template_name = 'halls/detail_challenge.html'
 
-class UpdateChallenge(generic.UpdateView):
+class UpdateChallenge(LoginRequiredMixin,generic.UpdateView):
     form_class = CreateChallengeForm
     model = Challenge
     template_name = 'halls/update_challenge.html'
     #fields = ['title','url', 'pub_date', 'deadline_date', 'icon', 'body','hall']
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('allchallenges')
 
     def get_form(self):
         form = super().get_form()
@@ -184,15 +221,27 @@ class UpdateChallenge(generic.UpdateView):
         form.fields['deadline_date'].widget = DateTimePickerInput()
         return form
 
-class DeleteChallenge(generic.UpdateView):
+    def get_object(self):
+        challenge = super(UpdateChallenge, self).get_object()
+        if not challenge.hall.user == self.request.user:
+            raise Http404
+        return challenge
+
+class DeleteChallenge(LoginRequiredMixin,generic.UpdateView):
     form_class = CreateChallengeForm
     model = Challenge
     template_name = 'halls/delete_challenge.html'
     #fields = ['title','url', 'pub_date', 'deadline_date', 'icon', 'body','hall']
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('allchallenges')
 
     def get_form(self):
         form = super().get_form()
         form.fields['pub_date'].widget = DateTimePickerInput()
         form.fields['deadline_date'].widget = DateTimePickerInput()
         return form
+
+    def get_object(self):
+        challenge = super(DeleteChallenge, self).get_object()
+        if not challenge.hall.user == self.request.user:
+            raise Http404
+        return challenge

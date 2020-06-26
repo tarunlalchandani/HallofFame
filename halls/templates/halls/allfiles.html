@@ -25,50 +25,38 @@ img {
 </style>
 <div class = "container">
   <main role="main">
-    <div class="container">
-    <h1 class="text-center pt-3">All Available Files</h1>
-    <br/>
-    <br/>
-    <h2> Choose a file </h2>
-    </div>
-    <hr/>
-    <div class="card">
-      <div class="container">
 
 
 
 
-          {% for f in files.all %}
-          <div class="card">
-            <div class="row">
-              <div class="col-sm-4" >
-              <a href = "{% url 'detail_file' f.id %}"><h5 class="card-header"> {{ f.title }}</h5></a>
-              <br/>
-              </div>
-              <div class="col-sm-8">
-              <div class="card-body">
-                  <h5 class="card-title">Publication Date: {{f.pub_date}}</h5>
-                  <h5><b> Deadline Date: {{f.deadline_date}} </b></h5>
-                  <h6 class="card-title"><i>Challenge: {{f.challenge}}</i></h6>
-                  <p class="card-text">  <a href="{{ f.attachment.url }}"><p>Download File here </p></a></p>
-                </div>
-             </div>
+
+
+<div class="row">
+{% for f in files.all %}
+
+   <div class="col-lg-2 col-sm-3 mb-2" style="margin-top: 2%">
+       <div class="card shadow border-0 h-100">
+           <div class="card-body">
+               <h5 class="my-2"><a href="{{ f.attachment.url }}">{{ f.title }}</a></h5>
+               <h5 class="my-2">{{ f.challenge }}</h5>
+               <a href="{% url 'delete_file' f.id %}" style="margin-bottom: 2%" class ='btn btn-danger' ">Delete</a>
+               <a href="{% url 'update_file' f.id %}" class ='btn btn-success' ">Update</a>
+
            </div>
-           </div>
-           <br/>
-           <br/>
-          <!--<div class="container">
+       </div>
+   </div>
+
+{% if forloop.counter|divisibleby:6 %}
+
+</div><!-- close existing row and open another one-->
+<div class="row">
+{% endif %}
+{% endfor %}
+</div>
 
 
-              <img class = "card-image-top" src = "{{ category.image.url }}" height = "100" width = "100" class="img-fluid" alt="Responsive image"/>
-              <div class="card-body">
-              <p class="card-text">{{ category.summary }}</p>
 
 
-          </div>-->
-
-          {% endfor %}
-
-  </main>
+</main>
 </div>
 {% endblock %}

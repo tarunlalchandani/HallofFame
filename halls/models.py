@@ -26,13 +26,15 @@ class Hall(models.Model):
     def summary(self):
         return self.body[:500]
 
+
+
 class Challenge(models.Model):
     title = models.CharField(max_length=255)
-    url = models.URLField()
     pub_date = models.DateTimeField()
     deadline_date = models.DateTimeField()
     icon = models.ImageField(upload_to='images/')
     body = models.TextField()
+    stipend = models.FloatField()
     hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -46,9 +48,10 @@ class Challenge(models.Model):
 
 class File(models.Model):
     title = models.CharField(max_length=255)
-    pub_date = models.DateTimeField()
-    delete_by = models.DateTimeField()
-    attachment = models.FileField(upload_to = 'files/')
+    #pub_date = models.DateTimeField()
+    #description = models.TextField()
+    #delete_by = models.DateTimeField()
+    attachment = models.FileField(upload_to='files/')
     challenge = models.ForeignKey(Challenge, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
@@ -57,8 +60,5 @@ class File(models.Model):
     def pub_date_pretty(self):
         return self.pub.date.strftime('%b %e %Y')
 
-class Video(models.Model):
-    title = models.CharField(max_length=255)
-    url = models.URLField()
-    youtube_id = models.CharField(max_length=255)
-    hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
+    def substr(self):
+        return self.attachment.url[13:]

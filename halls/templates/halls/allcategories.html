@@ -42,7 +42,7 @@ img {
           <div class="card" t-10 b-10>
             <div class="row">
               <div class="col-sm-4" >
-              <a href = "{% url 'detail_hall' category.id %}"><h5 class="card-header"> {{ category.title }}</h5></a>
+              <a href="{% url 'seechallenges' category.id %}"><h5 class="card-header"> {{ category.title }}</h5></a>
               <br/>
               <img src="{{ category.image.url }}" alt="Avatar" height ="100" width="200" class="img-fluid" alt="Responsive image"/>
               </div>

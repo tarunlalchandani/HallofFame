@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import CustomUser
-from .models import Hall, Challenge, Video, File
+from .models import Hall, Challenge, File
 # Register your models here.
 
 class CustomUserAdmin(UserAdmin):
@@ -16,5 +16,5 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Hall)
 admin.site.register(Challenge)
-admin.site.register(Video)
+
 admin.site.register(File)
