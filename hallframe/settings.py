@@ -25,7 +25,7 @@ SECRET_KEY = 'm9x^()z_s(ftcge9&tfjj(#bo72fdx9en^)9y9%)rrfsvnblq)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ 'warm-bayou-37731.herokuapp.com/']
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
