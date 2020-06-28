@@ -53,6 +53,13 @@ img {
         <hr/>
         <div class="container">
         <h1 class="text-center pt-3">All Available Challenges in category {{hall}}</h1>
+        {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+            <li><h3 class="text center pt-3">{% if message.tags %}{% endif %}{{ message }}</h3></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
         <br/>
         <br/>
         <h5> Choose a Challenge </h5>

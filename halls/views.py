@@ -15,12 +15,16 @@ import urllib
 from django.forms.utils import ErrorList
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib import messages
 
 
 
 def home(request):
-    return render(request,'halls/home.html')
+    recent_category = Hall.objects.all().order_by('-id')[:5]
+    recent_challenges = Challenge.objects.all().order_by('-id')[:10]
+    deadline_challenges = Challenge.objects.all().order_by('-deadline_date')
+    return render(request,'halls/home.html', {'recent_category':recent_category,'recent_challenges':recent_challenges,'deadline_challenges':deadline_challenges})
+
 
 
 def allcategories(request):
@@ -80,7 +84,12 @@ class CreateHall(LoginRequiredMixin,generic.CreateView):
     model =  Hall
     #fields = ['title','image', 'body']
     template_name = 'halls/create_hall.html'
-    success_url = reverse_lazy('edashboard')
+    #success_url = reverse_lazy('edashboard')
+
+    def get_success_url(self):
+        s = 'Category'+ self.object.title + ' created successfully'
+        messages.add_message(self.request, messages.INFO, s)
+        return reverse_lazy('edashboard')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -97,7 +106,12 @@ class UpdateHall(LoginRequiredMixin,generic.UpdateView):
     model = Hall
     template_name = 'halls/update_hall.html'
     fields = ['title','image','body']
-    success_url = reverse_lazy('edashboard')
+    #success_url = reverse_lazy('edashboard')
+
+    def get_success_url(self):
+        s = 'Category'+ self.object.title + ' updated successfully'
+        messages.add_message(self.request, messages.INFO, s)
+        return reverse_lazy('edashboard')
 
     def get_object(self):#this does not works with create and detail
         hall = super(UpdateHall, self).get_object()
@@ -109,7 +123,12 @@ class DeleteHall(LoginRequiredMixin, generic.UpdateView):
     model = Hall
     template_name = 'halls/delete_hall.html'
     fields = ['title','image','body']
-    success_url = reverse_lazy('edashboard')
+    #success_url = reverse_lazy('edashboard')
+
+    def get_success_url(self):
+        s = 'Category'+ self.object.title + ' deleted successfully'
+        messages.add_message(self.request, messages.INFO, s)
+        return reverse_lazy('edashboard')
 
     def get_object(self):#this does not works with create and detail
         hall = super(UpdateHall, self).get_object()
@@ -121,7 +140,13 @@ class AddFile(LoginRequiredMixin,generic.CreateView):
     form_class = AddFileForm
     model =  File
     template_name = 'halls/add_file.html'
-    success_url = reverse_lazy('seefiles')
+    # success_url = "/add_file_completed/"
+
+    def get_success_url(self):
+        s = 'file '+ self.object.title + ' added successfully'
+        messages.add_message(self.request, messages.INFO, s)
+        challenge = self.object.challenge
+        return reverse_lazy('seefiles', kwargs = {'pk':challenge.pk })
 
     def get_form(self):
         form = super().get_form()
@@ -135,7 +160,7 @@ class AddFile(LoginRequiredMixin,generic.CreateView):
         #super of class is generic CreateView
         super(AddFile, self).form_valid(form)
         form.save()
-        return redirect('allfiles')
+        return super().form_valid(form)
 
 
 
@@ -145,7 +170,13 @@ class UpdateFile(LoginRequiredMixin,generic.UpdateView):
     model = File
     template_name = 'halls/update_file.html'
 #    fields = ['title','pub_date', 'delete_by','attachment','challenge']
-    success_url = reverse_lazy('allfiles')
+    # success_url = "/update_file_completed/"
+
+    def get_success_url(self):
+        s = 'file ' + self.object.title + ' updated successfully'
+        messages.add_message(self.request, messages.INFO, s)
+        challenge = self.object.challenge
+        return reverse_lazy('seefiles', kwargs = {'pk':challenge.pk })
 
     def get_form(self):
         form = super().get_form()
@@ -159,12 +190,16 @@ class UpdateFile(LoginRequiredMixin,generic.UpdateView):
             raise Http404
         return file
 
-class DeleteFile(LoginRequiredMixin,generic.UpdateView):
+class DeleteFile(LoginRequiredMixin,generic.DeleteView):
     form_class = AddFileForm
     model = File
     template_name = 'halls/delete_file.html'
     #fields = ['title','pub_date', 'delete_by','attachment','challenge']
-    success_url = reverse_lazy('allfiles')
+    def get_success_url(self):
+        s = 'file '+ self.object.title +' deleted successfully'
+        messages.add_message(self.request, messages.INFO, s)
+        challenge = self.object.challenge
+        return reverse_lazy('seefiles', kwargs = {'pk':challenge.pk })
 
     def get_form(self):
         form = super().get_form()
@@ -186,8 +221,13 @@ class CreateChallenge(LoginRequiredMixin,generic.CreateView):
     form_class = CreateChallengeForm
     model =  Challenge
     template_name = 'halls/create_challenge.html'
-    success_url = reverse_lazy('allchallenges')
+    # success_url = "/create_challenge_completed/"
 
+    def get_success_url(self):
+        s = 'challenge ' + self.object.title + ' created successfully'
+        messages.add_message(self.request, messages.INFO, s)
+        hall = self.object.hall
+        return reverse_lazy('seechallenges', kwargs = {'pk':hall.pk })
     # def create_form(self, *args, **kwargs):
     #     form = super(CreateChallenge, self).create_form(*args, **kwargs)
     #     form.instance.user = self.request.user
@@ -201,7 +241,7 @@ class CreateChallenge(LoginRequiredMixin,generic.CreateView):
         #super of class is generic CreateView
         super(CreateChallenge, self).form_valid(form)
         form.save()
-        return redirect('allchallenges')
+        return super().form_valid(form)
 
 
 class DetailChallenge(LoginRequiredMixin,generic.DetailView):
@@ -213,7 +253,12 @@ class UpdateChallenge(LoginRequiredMixin,generic.UpdateView):
     model = Challenge
     template_name = 'halls/update_challenge.html'
     #fields = ['title','url', 'pub_date', 'deadline_date', 'icon', 'body','hall']
-    success_url = reverse_lazy('allchallenges')
+
+    def get_success_url(self):
+        s = 'challenge '+ self.object.title + ' updated successfully'
+        messages.add_message(self.request, messages.INFO, s)
+        hall = self.object.hall
+        return reverse_lazy('seechallenges',kwargs = {'pk':hall.pk })
 
     def get_form(self):
         form = super().get_form()
@@ -227,12 +272,18 @@ class UpdateChallenge(LoginRequiredMixin,generic.UpdateView):
             raise Http404
         return challenge
 
-class DeleteChallenge(LoginRequiredMixin,generic.UpdateView):
+class DeleteChallenge(LoginRequiredMixin,generic.DeleteView):
     form_class = CreateChallengeForm
     model = Challenge
     template_name = 'halls/delete_challenge.html'
     #fields = ['title','url', 'pub_date', 'deadline_date', 'icon', 'body','hall']
-    success_url = reverse_lazy('allchallenges')
+    # success_url = "/delete_challenge_completed/"
+
+    def get_success_url(self):
+        s = 'challenge '+ self.object.title + ' deleted successfully'
+        messages.add_message(self.request, messages.INFO, s)
+        hall = self.object.hall
+        return reverse_lazy('seechallenges', kwargs = {'pk':hall.pk })
 
     def get_form(self):
         form = super().get_form()

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
+from django.shortcuts import reverse
 
 
 
@@ -40,6 +41,9 @@ class Challenge(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('seechallenges', kwargs = {'pk': self.hall.pk})
+
     def summary(self):
         return self.body[:100]
 
@@ -56,6 +60,9 @@ class File(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('seefiles', kwargs = {'pk': self.challenge.pk})
 
     def pub_date_pretty(self):
         return self.pub.date.strftime('%b %e %Y')

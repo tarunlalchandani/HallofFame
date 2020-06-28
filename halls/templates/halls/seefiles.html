@@ -31,6 +31,7 @@ img {
       <div class="col-md-4">
       <h3>{{ challenge.title }}</h3>
 
+
       <img src="{{ challenge.icon.url }}" height ='100' width ='300'class="img-fluid" alt="Responsive image"/>
       </div>
       <div class="col-md-8">
@@ -48,6 +49,13 @@ img {
 
     <div class="container">
     <h3 class="text-center pt-3">All Available Files</h3>
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+        <li><h3 class="text center pt-3">{% if message.tags %} {% endif %}{{ message }}</h3></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
     <a href="{% url 'add_file' pk=challenge.pk  %}" class ='btn btn-primary' ">AddFile</a>
     <br/>
     <br/>

@@ -1,6 +1,157 @@
 {%extends 'halls/base.html'%}
 {% block content %}
+{%load static%}
+<section class="jumbotron text-center">
+  <div class = "container">
+    <h1>Gopidas Padakamalayor das das das anudas </h1>
+    <p class="load text-muted">You have all the top categories and it's time to solve them and earn money. Click the button to get started</p>
+    <a href="{% url 'create_hall' %}" class ='btn btn-primary' ">Create Your Category of Challenges</a>
+  </div>
+</section>
 <div class = "container">
-Hare Krsna! This is the homepage......
+  <h1 class="text-center">Recent Categories</h1>
+  <div class="row">
+ {% for hall in recent_category %}
+
+     <div class="col-lg-4 col-sm-6 mb-4" style="margin-top: 2%">
+         <div class="card shadow border-0 h-100">
+             <div class="card-body">
+                 <h5 class="my-2"><a href="{% url 'seechallenges' hall.id %}">{{ hall.title }}</a></h5>
+                 <a href="{% url 'delete_hall' hall.id %}" class ='btn btn-danger' ">Delete</a>
+                 <a href="{% url 'update_hall' hall.id %}" class ='btn btn-success' ">Update</a>
+                 <br/>
+
+             </div>
+         </div>
+     </div>
+
+{% if forloop.counter|divisibleby:3 %}
+
+</div><!-- close existing row and open another one-->
+<div class="row">
+{% endif %}
+ {% endfor %}
+</div>
+
+<div class = "container">
+  <h1 class="text-center">Recent Challenges</h1>
+{% for challenge in recent_challenges %}
+<div class="card">
+  <div class="row">
+    <div class="col-sm-4" >
+      <div class="row">
+        &nbsp &nbsp &nbsp
+    <a href="{%url 'seefiles' challenge.id %}"><h6 class="card-header"> {{ challenge.title }}</h6></a>
+    <a href="{% url 'add_file' pk=challenge.pk  %}"><img src = "{% static 'add-file.png' %}" class='img-responsive' height="25" width="25"></a>
+    <a href="{% url 'delete_challenge' challenge.id %}" ><img src = "{% static 'delete.png' %}" class='img-responsive' height="25" width="25"></a>
+    <a href="{% url 'update_challenge' challenge.id %}"><img src = "{% static 'update.png' %}" class='img-responsive' height="25" width="25"></a>
+    </div>
+    <br/>
+    &nbsp &nbsp
+    <img src="{{ challenge.icon.url }}" alt="Avatar" height ="100" width="200" class="img-fluid" alt="Responsive image"/>
+    &nbsp &nbsp
+    <p class="card-title"><i>Category: {{challenge.hall}}</i></p>
+    </div>
+    <div class="col-sm-5">
+    <div class="card-body">
+
+        <p class="card-text">{{ challenge.summary }}</p>
+        <br/>
+
+      </div>
+   </div>
+   <div class="col-sm-3">
+     <div class="container">
+       <div class="row">
+         &nbsp &nbsp &nbsp
+       <img src="{%static 'coin.png' %}" height="80" width="80">
+
+       </div>
+       <div class="top-right">&nbsp &nbsp<button type="button" class="btn btn-success" name="button"><b><u>{{ challenge.stipend}} </u></b></button></div>
+
+       <hr/>
+       <p><b> Deadline Date: {{challenge.deadline_date}} </b></p>
+
+
+      </div>
+    </div>
+
+ </div>
+ </div>
+ <br/>
+ <br/>
+<!--<div class="container">
+
+
+    <img class = "card-image-top" src = "{{ category.image.url }}" height = "100" width = "100" class="img-fluid" alt="Responsive image"/>
+    <div class="card-body">
+    <p class="card-text">{{ category.summary }}</p>
+
+
+</div>-->
+
+{% endfor %}
+</div>
+
+
+<div class = "container">
+  <h1 class="text-center">Deadline Challenges</h1>
+{% for challenge in deadline_challenges %}
+<div class="card">
+  <div class="row">
+    <div class="col-sm-4" >
+      <div class="row">
+        &nbsp &nbsp &nbsp
+    <a href="{%url 'seefiles' challenge.id %}"><h6 class="card-header"> {{ challenge.title }}</h6></a>
+    <a href="{% url 'add_file' pk=challenge.pk  %}"><img src = "{% static 'add-file.png' %}" class='img-responsive' height="25" width="25"></a>
+    <a href="{% url 'delete_challenge' challenge.id %}" ><img src = "{% static 'delete.png' %}" class='img-responsive' height="25" width="25"></a>
+    <a href="{% url 'update_challenge' challenge.id %}"><img src = "{% static 'update.png' %}" class='img-responsive' height="25" width="25"></a>
+    </div>
+    <br/>
+    &nbsp &nbsp
+    <img src="{{ challenge.icon.url }}" alt="Avatar" height ="100" width="200" class="img-fluid" alt="Responsive image"/>
+    &nbsp &nbsp
+    <p class="card-title"><i>Category: {{challenge.hall}}</i></p>
+    </div>
+    <div class="col-sm-5">
+    <div class="card-body">
+
+        <p class="card-text">{{ challenge.summary }}</p>
+        <br/>
+
+      </div>
+   </div>
+   <div class="col-sm-3">
+     <div class="container">
+       <div class="row">
+         &nbsp &nbsp &nbsp
+       <img src="{%static 'coin.png' %}" height="80" width="80">
+
+       </div>
+       <div class="top-right">&nbsp &nbsp<button type="button" class="btn btn-success" name="button"><b><u>{{ challenge.stipend}} </u></b></button></div>
+
+       <hr/>
+       <p><b> Deadline Date: {{challenge.deadline_date}} </b></p>
+
+
+      </div>
+    </div>
+
+ </div>
+ </div>
+ <br/>
+ <br/>
+<!--<div class="container">
+
+
+    <img class = "card-image-top" src = "{{ category.image.url }}" height = "100" width = "100" class="img-fluid" alt="Responsive image"/>
+    <div class="card-body">
+    <p class="card-text">{{ category.summary }}</p>
+
+
+</div>-->
+
+{% endfor %}
+</div>
 </div>
 {% endblock %}

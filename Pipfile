@@ -13,6 +13,8 @@ django-widget-tweaks = "*"
 django-bootstrap4 = "*"
 django-bootstrap-datepicker-plus = "*"
 django-forms-bootstrap = "*"
+gunicorn = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.8"

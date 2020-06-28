@@ -35,7 +35,7 @@ urlpatterns = [
     path('halloffame/create', views.CreateHall.as_view(),name='create_hall'),
     path('halloffame/',views.allcategories, name='allcategories'),
     path('halloffame/<int:pk>', views.DetailHall.as_view(),name='detail_hall'),
-    path('halloffame/<hall>/update', views.UpdateHall.as_view(),name='update_hall'),
+    path('halloffame/<int:pk>/update', views.UpdateHall.as_view(),name='update_hall'),
     path('halloffame/<int:pk>/delete', views.DeleteHall.as_view(),name='delete_hall'),
     #challenges
     path('halloffame/createchallenge/<int:pk>/', views.CreateChallenge.as_view(),name='create_challenge'),
@@ -43,6 +43,7 @@ urlpatterns = [
 
     path('halloffame/challenges/gg/<int:pk>/update', views.UpdateChallenge.as_view(),name='update_challenge'),
     path('halloffame/challenges/gg/<int:pk>/delete', views.DeleteChallenge.as_view(),name='delete_challenge'),
+
     path('halloffame/<int:cpk>/challenges/gg/<int:pk>', views.DetailChallenge.as_view(),name='detail_challenge'),
     #Collecting Challenges for a particular Category
     path('halloffame/<int:pk>/challenges', views.seechallenges, name='seechallenges'),
