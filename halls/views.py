@@ -7,7 +7,7 @@ from .models import Hall, File
 from .models import Challenge
 from .models import CustomUser
 from .forms import CustomUserCreationForm
-from .forms import  SearchForm, CreateHallForm, CreateChallengeForm, AddFileForm
+from .forms import  SearchForm, CreateHallForm, CreateChallengeForm, AddFileForm, TutorSignUpForm, EmployeeSignUpForm
 from django.forms import formset_factory
 from bootstrap_datepicker_plus import DateTimePickerInput
 from django.http import Http404
@@ -16,7 +16,8 @@ from django.forms.utils import ErrorList
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-
+from django.utils.decorators import method_decorator
+from .decorators import tutor_required, employee_required
 
 
 def home(request):
@@ -25,8 +26,10 @@ def home(request):
     deadline_challenges = Challenge.objects.all().order_by('-deadline_date')
     return render(request,'halls/home.html', {'recent_category':recent_category,'recent_challenges':recent_challenges,'deadline_challenges':deadline_challenges})
 
+def signup(request):
+    return render(request,'registration/signup.html')
 
-
+@login_required
 def allcategories(request):
     categories = Hall.objects
     return render(request,'halls/allcategories.html',{'categories':categories})
@@ -36,19 +39,21 @@ def allfiles(request):
     files = File.objects
     return render(request,'halls/allfiles.html',{'files':files})
 
+
 def allchallenges(request):
     challenges = Challenge.objects
     return render(request,'halls/allchallenges.html',{'challenges':challenges})
 
 @login_required
+@employee_required
 def edashboard(request):
     halls = Hall.objects.all() #afterwards for user to filter challenges use halls = Hall.objects.filter(user=request,user)
     return render(request, 'halls/edashboard.html',{'halls':halls})
 
 @login_required
+@tutor_required
 def dashboard(request):
     return render(request,'halls/edashboard.html')
-
 
 def seechallenges(request, pk):
     hall = Hall.objects.get(id = pk)
@@ -61,17 +66,47 @@ def seefiles(request, pk):
      files = challenge.file_set.all()
      return render(request, 'halls/seefiles.html',{'files':files,'challenge':challenge})
 
-class SignUp(generic.CreateView):
-    form_class = CustomUserCreationForm
-    success_url = reverse_lazy('home')
-    template_name = 'registration/signup.html'
 
-    def form_valid(self, form):
-        view = super(SignUp, self).form_valid(form)
-        email, password = form.cleaned_data.get('email'), form.cleaned_data.get('password')
+class EmployeeSignUpView(generic.CreateView):
+    model = CustomUser
+    form_class = EmployeeSignUpForm
+    template_name = 'registration/signup_employee.html'
+
+    def get_context_data(self,**kwargs):
+        kwargs['user_type'] = 'employee'
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self,form):
         user = form.save()
-        login(self.request, user, backend = 'django.contrib.auth.backends.ModelBackend')
-        return view
+        login(self.request, user)
+        return redirect('home')
+
+
+class TutorSignUpView(generic.CreateView):
+    model = CustomUser
+    form_class = TutorSignUpForm
+    template_name = 'registration/signup_tutor.html'
+
+    def get_context_data(self,**kwargs):
+        kwargs['user_type'] = 'tutor'
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self,form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('home')
+
+# class SignUp(generic.CreateView):
+#     form_class = CustomUserCreationForm
+#     success_url = reverse_lazy('home')
+#     template_name = 'registration/signup.html'
+#
+#     def form_valid(self, form):
+#         view = super(SignUp, self).form_valid(form)
+#         email, password = form.cleaned_data.get('email'), form.cleaned_data.get('password')
+#         user = form.save()
+#         login(self.request, user, backend = 'django.contrib.auth.backends.ModelBackend')
+#         return view
 
 #CRUD = Create, Read, Update, Destroy
 class Login(generic.CreateView):
@@ -79,6 +114,7 @@ class Login(generic.CreateView):
     success_url = reverse_lazy('home')
     template_name = 'registration/login.html'
 
+@method_decorator([login_required,employee_required], name='dispatch')
 class CreateHall(LoginRequiredMixin,generic.CreateView):
     form_class = CreateHallForm
     model =  Hall
@@ -98,10 +134,12 @@ class CreateHall(LoginRequiredMixin,generic.CreateView):
         form.save()
         return redirect('edashboard')
 
+
 class DetailHall(generic.DetailView):
     model = Hall
     template_name = 'halls/detail_hall.html'
 
+@method_decorator([login_required,employee_required], name='dispatch')
 class UpdateHall(LoginRequiredMixin,generic.UpdateView):
     model = Hall
     template_name = 'halls/update_hall.html'
@@ -118,7 +156,7 @@ class UpdateHall(LoginRequiredMixin,generic.UpdateView):
         if not hall.user == self.request.user:
             raise Http404
         return hall
-
+@method_decorator([login_required,employee_required], name='dispatch')
 class DeleteHall(LoginRequiredMixin, generic.UpdateView):
     model = Hall
     template_name = 'halls/delete_hall.html'
@@ -136,6 +174,7 @@ class DeleteHall(LoginRequiredMixin, generic.UpdateView):
             raise Http404
         return hall
 
+@method_decorator([login_required,employee_required], name='dispatch')
 class AddFile(LoginRequiredMixin,generic.CreateView):
     form_class = AddFileForm
     model =  File
@@ -164,7 +203,7 @@ class AddFile(LoginRequiredMixin,generic.CreateView):
 
 
 
-
+@method_decorator([login_required,employee_required], name='dispatch')
 class UpdateFile(LoginRequiredMixin,generic.UpdateView):
     form_class = AddFileForm
     model = File
@@ -190,6 +229,7 @@ class UpdateFile(LoginRequiredMixin,generic.UpdateView):
             raise Http404
         return file
 
+@method_decorator([login_required,employee_required], name='dispatch')
 class DeleteFile(LoginRequiredMixin,generic.DeleteView):
     form_class = AddFileForm
     model = File
@@ -213,10 +253,12 @@ class DeleteFile(LoginRequiredMixin,generic.DeleteView):
             raise Http404
         return file
 
+
 class DetailFile(LoginRequiredMixin,generic.DetailView):
     model = File
     template_name = 'halls/detail_file.html'
 
+@method_decorator([login_required,employee_required], name='dispatch')
 class CreateChallenge(LoginRequiredMixin,generic.CreateView):
     form_class = CreateChallengeForm
     model =  Challenge
@@ -248,6 +290,7 @@ class DetailChallenge(LoginRequiredMixin,generic.DetailView):
     model = Challenge
     template_name = 'halls/detail_challenge.html'
 
+@method_decorator([login_required,employee_required], name='dispatch')
 class UpdateChallenge(LoginRequiredMixin,generic.UpdateView):
     form_class = CreateChallengeForm
     model = Challenge
@@ -272,6 +315,7 @@ class UpdateChallenge(LoginRequiredMixin,generic.UpdateView):
             raise Http404
         return challenge
 
+@method_decorator([login_required,employee_required], name='dispatch')
 class DeleteChallenge(LoginRequiredMixin,generic.DeleteView):
     form_class = CreateChallengeForm
     model = Challenge

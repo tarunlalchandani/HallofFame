@@ -28,7 +28,10 @@ urlpatterns = [
     path('dashboard',views.dashboard, name='dashboard'),
     path('edashboard',views.edashboard, name='edashboard'),
     # AUTH
-    path('signup', views.SignUp.as_view(), name="signup"),
+    #path('signup', views.SignUp.as_view(), name="signup")
+    path('signup',views.signup,name='signup'),
+    path('signup/tutor',views.TutorSignUpView.as_view(), name='tutor_signup'),
+    path('signup/employee',views.EmployeeSignUpView.as_view(),name='employee_signup'),
     path('login', auth_views.LoginView.as_view(), name="login"),
     path('logout', auth_views.LogoutView.as_view(), name="logout"),
     #Halls
@@ -43,8 +46,7 @@ urlpatterns = [
 
     path('halloffame/challenges/gg/<int:pk>/update', views.UpdateChallenge.as_view(),name='update_challenge'),
     path('halloffame/challenges/gg/<int:pk>/delete', views.DeleteChallenge.as_view(),name='delete_challenge'),
-
-    path('halloffame/<int:cpk>/challenges/gg/<int:pk>', views.DetailChallenge.as_view(),name='detail_challenge'),
+    path('halloffame/challenges/gg/<int:pk>', views.DetailChallenge.as_view(),name='detail_challenge'),
     #Collecting Challenges for a particular Category
     path('halloffame/<int:pk>/challenges', views.seechallenges, name='seechallenges'),
     #Collecting Files for a particular challenge{% url 'seefiles' challenge.id %}

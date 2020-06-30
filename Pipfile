@@ -15,8 +15,6 @@ django-bootstrap-datepicker-plus = "*"
 django-forms-bootstrap = "*"
 gunicorn = "*"
 psycopg2 = "*"
-dj-database-url = "*"
-whitenoise = "*"
 
 [requires]
 python_version = "3.8"

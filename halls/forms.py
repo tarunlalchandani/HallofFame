@@ -1,9 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser
-
+from django.db import transaction
 from .models import Hall
 from .models import File
+from .models import Tutor
 from .models import Challenge
 from bootstrap_datepicker_plus import DateTimePickerInput
 
@@ -57,3 +58,38 @@ class AddFileForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     search_term = forms.CharField(max_length=255, label='Search for Videos:')
+
+class EmployeeSignUpForm(UserCreationForm):
+
+    class Meta:
+        model = CustomUser
+        fields = ('username','email')
+        labels = {'username':'Your Nickname', 'email':'Enter your Email'}
+
+    def save(self,commit=True):
+        user = super().save(commit=False)
+        user.is_employee = True
+        if commit:
+            user.save()
+        return user
+
+class TutorSignUpForm(UserCreationForm):
+    interests = forms.ModelMultipleChoiceField(
+        queryset = Hall.objects.all(),
+        widget = forms.CheckboxSelectMultiple,
+        required = True
+    )
+
+    class Meta:
+        model = CustomUser
+        fields = ('username','email')
+        labels = {'username':'Your Nickname', 'email':'Enter your Email'}
+
+    @transaction.atomic
+    def save(self):
+        user = super().save(commit=False)
+        user.is_tutor = True
+        user.save()
+        tutor = Tutor.objects.create(user=user)
+        tutor.interests.add(*self.cleaned_data.get('interests'))
+        return user

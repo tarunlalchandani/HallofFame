@@ -4,9 +4,9 @@ from django.conf import settings
 from django.shortcuts import reverse
 
 
-
 class CustomUser(AbstractUser) :
-
+    is_tutor = models.BooleanField(default=False)
+    is_employee = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
     email = models.EmailField(max_length=254, unique=True)
     REQUIRED_FIELDS = ['username']
@@ -69,3 +69,9 @@ class File(models.Model):
 
     def substr(self):
         return self.attachment.url[13:]
+
+
+class Tutor(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
+    challenges = models.ManyToManyField(Challenge)
+    interests = models.ManyToManyField(Hall)
