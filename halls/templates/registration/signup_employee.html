@@ -1,6 +1,55 @@
 {%extends 'halls/base.html'%}
 {% block content %}
+{%load static%}
+<style>
+  body{
+     background-image: url( "{% static 'halls/images/back.jpg' %}");
+    background: linear-gradient(120deg, #BBC8D9, #FEFEFE);
+  }
+  .center{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background: white;
+    border-radius: 10px;
+  }
+  .center h1{
+    text-align: center;
+    padding: 0 0 20px 0;
+    border-bottom: 1px solid silver;
+  }
+  .pass{
+    margin: -5px 0 20px 5px;
+    color: #a6a6a6;
+    cursor: pointer;
+  }
+  .pass:hover{
+    text-decoration: underline;
+  }
+  button{
+    width: 100%;
+    height: 50px;
+    border: 1px solid;
+    background: #2691d9;
+    border-radius: 25px;
+    font-size: 18px;
+    color: #e9f4fb;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none
+  }
+  button:hover{
+    border-color: #2691d9;
+    transition: .5s;
+}
+</style>
 <div class="container">
+  <div class="row">
+  <div class="col-md-3">
+    </div>
+  <div class="col-md-6">
   <h2>Sign Up</h2>
   <form method="post">
     {% csrf_token %}
@@ -16,7 +65,10 @@
     </div>
     {% endfor %}
 
-    <button type="Submit" class="btn btn-primary">Sign Up</button>
+    <button type="Submit" class="btn btn-success">Sign Up</button>
   </form>
+</div>
+<div class="col-md-3">
+  </div>
 </div>
 {% endblock %}

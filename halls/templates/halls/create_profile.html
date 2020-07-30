@@ -1,0 +1,29 @@
+{%extends 'halls/base2.html'%}
+{% block content %}
+<div class = "container">
+  <div class = "container">
+    <section id="portfolio" class="wow fadeInUp">
+      <div class="container">
+        <div class="section-header">
+          <h2>Create Your Profile</h2>
+          <p>Here you can create your Profile</p>
+        </div>
+      </div>
+        <hr/>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% load widget_tweaks %}
+
+  {% for field in form %}
+  <div class="form-group {% if field.errors %}alert-danger{% endif %}">
+    {{ field.errors }}
+    {{ field.label_tag }}
+    {% render_field field class="form-control" %}
+  </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-primary">Create</button>
+</form>
+</section>
+</div>
+</div>
+{% endblock %}

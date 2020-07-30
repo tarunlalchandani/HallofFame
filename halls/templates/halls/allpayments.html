@@ -1,0 +1,62 @@
+{%extends 'halls/base.html'%}
+{% block content %}
+<style>
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px; /* 5px rounded corners */
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+.container {
+  padding: 2px 16px;
+}
+
+
+/* Add rounded corners to the top left and the top right corner of the image */
+img {
+  border-radius: 5px 5px 0 0;
+}
+</style>
+<div class = "container">
+  <section id="portfolio" class="wow fadeInUp">
+
+
+
+
+
+
+    <div class="row">
+    {% for p in payments.all %}
+
+       <div class="col-lg-2 col-sm-3 mb-2" style="margin-top: 2%">
+           <div class="card shadow border-0 h-100">
+               <div class="card-body">
+             <a href="{% url 'detail_payment' p.id%}" class="btn btn-success">seedetails</a>
+
+
+               <h5 class="my-2">RequestId:Req{{p.request.id}}</h5>
+               <h5 class="my-2">PaymentId:Pay{{p.id}}</h5>
+               <!--<a href="{% url 'delete_payment' p.id %}" style="margin-bottom: 2%" class ='btn btn-danger' ">Delete</a>-->
+               <a href="{% url 'update_payment' p.id %}" class ='btn btn-success' ">Update</a>
+
+             </div>
+         </div>
+     </div>
+
+  {% if forloop.counter|divisibleby:6 %}
+
+  </div><!-- close existing row and open another one-->
+  <div class="row">
+  {% endif %}
+  {% endfor %}
+  </div>
+
+  </section>
+  </div>
+{% endblock %}

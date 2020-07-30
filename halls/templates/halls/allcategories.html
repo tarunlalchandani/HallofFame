@@ -1,4 +1,4 @@
-{%extends 'halls/base.html'%}
+{%extends 'halls/base2.html'%}
 {% block content %}
 <style>
   .card {
@@ -25,19 +25,45 @@ img {
 </style>
 <div class = "container">
   <main role="main">
-    <div class="container">
-    <h1 class="text-center pt-3">All Available Categories</h1>
-    <br/>
-    <br/>
-    <h2> Choose a Category </h2>
-    </div>
-    <hr/>
-    <div class="album py-5 bg-light">
+    <section id="portfolio" class="wow fadeInUp">
       <div class="container">
+        <div class="section-header">
+          <h2>Start Solving a Category</h2>
+          <p>Here the Challenges are sorted according to the Category or Subject</p>
+        </div>
+      </div>
+        <hr/>
+
+      <div class="container-fluid">
+        <div class="row no-gutters">
+          {%for category in categories.all%}
+          <div class="col-lg-3 col-md-4">
+            <a href="{% url 'seechallenges' category.id %}" >
+            <div class="portfolio-item wow fadeInUp card">
+                <img src="{{ category.image.url }}" height="100px" width="120px" hspace="5px" vspace = "5px">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">{{ category.title }}</h2></div>
+                </div>
+
+            </div>
+            </a>
+
+          </div>
+        {% if forloop.counter|divisibleby:4 %}
+
+        </div><!-- close existing row and open another one-->
+        <div class="row no-gutters">
+        {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+
+    </section><!-- #portfolio -->
 
 
 
 
+<!--
           {% for category in categories.all %}
           <div class="card" t-10 b-10>
             <div class="row">
@@ -75,10 +101,10 @@ img {
               <p class="card-text">{{ category.summary }}</p>
 
 
-          </div>-->
+          </div>
 
           {% endfor %}
-
+-->
   </main>
 </div>
 {% endblock %}

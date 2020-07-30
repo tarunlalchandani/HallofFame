@@ -4,24 +4,47 @@ from .models import CustomUser
 from django.db import transaction
 from .models import Hall
 from .models import File
-from .models import Tutor
+from .models import Payment
+from .models import Solution
+from .models import Profile
 from .models import Challenge
+from .models import Request
 from bootstrap_datepicker_plus import DateTimePickerInput
 
 class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username','email')
+        fields = ('username','email','is_tutor','is_employee')
         labels = {'username':'Your Nickname', 'email':'Enter your Email'}
+
 
 class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username','email')
+        fields = ('username','email','is_tutor','is_employee')
         labels = {'username':'Your Nickname', 'email':'Enter your Email'}
 
+
+
+class CreateProfileForm(forms.ModelForm):
+
+    class Meta:
+        model = Profile
+        fields = {'FirstName','LastName','WhatsappNumber','Skills','University','Branch','Year','Resume','upiId','AccountNumber','BeneficiaryName','IFSC','Other_Details'}
+        labels = {'FirstName':'FirstName*','LastName':'LastName*','WhatsappNumber':'WhatsappNumber*','Skills':'Skills*','University':'University','Branch':'Branch','Year':'ExperienceInYears','Resume':'Resume','upiId':'upiId','AccountNumber':'AccountNumber','BeneficiaryName':'BeneficiaryName','IFSC':'IFSC','Other_Details':'Give a short Introduction'}
+
+
+        def save(self,commit=True):
+            user = super().save(commit=False)
+            user.rating = '0'
+            user.money_earned = 0
+            if commit:
+                user.save()
+            return user
+    field_order = ['FirstName','LastName','WhatsappNumber','Skills','University','Branch','Year','Resume','upiId','AccountNumber','BeneficiaryName','IFSC','Other_Details']
+        #not taken rating, money_earned as we will see to it decided by the employee
 
 
 
@@ -38,9 +61,8 @@ class CreateChallengeForm(forms.ModelForm):
 
     class Meta:
         model = Challenge
-        fields = ['title','pub_date','deadline_date','icon','body','stipend']
+        fields = ['title','deadline_date','body','stipend','type']
         widgets = {
-            'pub_date': DateTimePickerInput(),
             'deadline_date' : DateTimePickerInput(),
         }
 
@@ -54,6 +76,21 @@ class AddFileForm(forms.ModelForm):
         #     'attachment' : forms.ClearableFileInput(attrs={'multiple':True})
         # }
 
+class AddSolutionForm(forms.ModelForm):
+    class Meta:
+        model = Solution
+        fields = ['ans','solutionfile']
+
+class AddPaymentForm(forms.ModelForm):
+    class Meta:
+        model = Payment
+        fields = ['payment_details','payment_file']
+
+class RequestChallengeForm(forms.ModelForm):
+    class Meta:
+        model = Request
+        fields = ['HowToSolve']
+        labels = {'HowToSolve':'How You are going to Solve It'}
 
 
 class SearchForm(forms.Form):
@@ -69,27 +106,21 @@ class EmployeeSignUpForm(UserCreationForm):
     def save(self,commit=True):
         user = super().save(commit=False)
         user.is_employee = True
+        user.is_tutor = False
         if commit:
             user.save()
         return user
 
 class TutorSignUpForm(UserCreationForm):
-    interests = forms.ModelMultipleChoiceField(
-        queryset = Hall.objects.all(),
-        widget = forms.CheckboxSelectMultiple,
-        required = True
-    )
-
     class Meta:
         model = CustomUser
         fields = ('username','email')
         labels = {'username':'Your Nickname', 'email':'Enter your Email'}
 
-    @transaction.atomic
-    def save(self):
+    def save(self,commit=True):
         user = super().save(commit=False)
         user.is_tutor = True
-        user.save()
-        tutor = Tutor.objects.create(user=user)
-        tutor.interests.add(*self.cleaned_data.get('interests'))
+        user.is_employee = False
+        if commit:
+            user.save()
         return user

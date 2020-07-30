@@ -1,4 +1,4 @@
-{%extends 'halls/base.html'%}
+{%extends 'halls/base2.html'%}
 {% block content %}
 {%load static %}
 <style>
@@ -25,104 +25,82 @@ img {
 }
 </style>
 <div class = "container">
-  <main role="main">
-
-    <div class="card">
-      <div class="container">
-
-
-
-        <div class="album py-5 bg-light">
-        <div class="container">
+  <section id="portfolio" class="wow fadeInUp">
+    <div class="container">
+      <div class="section-header">
         <div class="row">
-          <div class="col-md-4">
-          <h4> {{ hall.title }}</h4>
-
+        <div class="col-md-4">
+          <h2>{{hall.title}}</h2>
           <img src="{{ hall.image.url }}"height = "100" width="200" class="img-fluid" alt="Responsive image"/>
-          </div>
-          <div class="col-md-8">
+        </div>
+        <div class="col-md-8">
+          <div class = "wow fadeInLeft">
             <br/>
             <br/>
-            <h5>{{ hall.body }}</h5>
-          </div>
+            <br/>
+            <br/>
+        <strong><p>{{hall.body}}</p></strong>
         </div>
+        {%if user.is_employee %}
+        <div class="container">
+
+        <br/>
+        <br/>
+
+
+          <a href="{% url 'create_challenge' hall.id %}" class ='btn btn-primary' ">Create Challenge</a>
+
         </div>
-        <br/>
-        <br/>
-        <br/>
+        {%endif%}
+        </div>
+    </div>
+    </div>
+
+      <hr/>
+    </div>
+        </section>
+        </div>
         <hr/>
         <div class="container">
-        <h1 class="text-center pt-3">All Available Challenges in category {{hall}}</h1>
-        {% if messages %}
-          <ul class="messages">
-            {% for message in messages %}
-            <li><h3 class="text center pt-3">{% if message.tags %}{% endif %}{{ message }}</h3></li>
-            {% endfor %}
-          </ul>
-        {% endif %}
+          <div class="row no-gutters ">
+        {%for challenge in problems.all %}
+        <div class="col-lg-2 col-md-2">
+        <a href = "{%url 'seefiles' challenge.id %}"><h5 class="card-header"> {{ challenge.title }}</h5></a>
+        {%if user.is_employee %}
+        <a href="{% url 'add_file' pk=challenge.id  %}"><img src = "{% static 'add-file.png' %}" class='img-responsive' height="25" width="25"></a>
+        <!--<a href="{% url 'delete_challenge' challenge.id %}" ><img src = "{% static 'delete.png' %}" class='img-responsive' height="25" width="25"></a>-->
+        <a href="{% url 'update_challenge' challenge.id %}"><img src = "{% static 'update.png' %}" class='img-responsive' height="25" width="25"></a>
+        {%endif%}
         <br/>
-        <br/>
-        <h5> Choose a Challenge </h5>
-         <a href="{% url 'create_challenge' hall.id %}" class ='btn btn-primary' ">Create Challenge</a>
+
         </div>
-        <hr/>
-          {% for challenge in problems.all %}
-          <div class="card">
-            <div class="row">
-              <div class="col-sm-4" >
-                <div class="row">
-                  &nbsp &nbsp &nbsp
-              <a href="{%url 'seefiles' challenge.id %}"><h6 class="card-header"> {{ challenge.title }}</h6></a>
-              <a href="{% url 'add_file' pk=challenge.pk  %}"><img src = "{% static 'add-file.png' %}" class='img-responsive' height="25" width="25"></a>
-              <a href="{% url 'delete_challenge' challenge.id %}" ><img src = "{% static 'delete.png' %}" class='img-responsive' height="25" width="25"></a>
-              <a href="{% url 'update_challenge' challenge.id %}"><img src = "{% static 'update.png' %}" class='img-responsive' height="25" width="25"></a>
-              </div>
-              <br/>
-              &nbsp &nbsp
-              <img src="{{ challenge.icon.url }}" alt="Avatar" height ="100" width="200" class="img-fluid" alt="Responsive image"/>
-              &nbsp &nbsp
-              <p class="card-title"><i>Category: {{challenge.hall}}</i></p>
-              </div>
-              <div class="col-sm-5">
-              <div class="card-body">
+        <div class="col-lg-2 col-md-2">
+        <div class="card-body">
+            {%if user.is_employee%}
+            <h5 class="card-title">Publication Date: {{challenge.pub_date}}</h5>
+            {%endif%}
+            <h5><b> Time Left: {{challenge.get_time_left}} </b></h5>
+            <h5><b> {{challenge.get_Type}}</b></h5>
+            <br/>
 
-                  <p class="card-text">{{ challenge.summary }}</p>
-                  <br/>
+          </div>
+       </div>
+       <div class="col-lg-2 col-md-2">
+         <div class="container">
+           <div class="row">
 
-                </div>
-             </div>
-             <div class="col-sm-3">
-               <div class="container">
-                 <div class="row">
-                   &nbsp &nbsp &nbsp
-                 <img src="{%static 'coin.png' %}" height="80" width="80">
-
-                 </div>
-                 <div class="top-right">&nbsp &nbsp<button type="button" class="btn btn-success" name="button"><b><u>{{ challenge.stipend}} </u></b></button></div>
-
-                 <hr/>
-                 <p><b> Deadline Date: {{challenge.deadline_date}} </b></p>
-
-
-                </div>
-              </div>
 
            </div>
-           </div>
-           <br/>
-           <br/>
-          <!--<div class="container">
+           <div class="top-right">&nbsp &nbsp &nbsp<button type="button" class="label label-success" name="button"><b><u>Rs {{ challenge.stipend}} </u></b></button></div>
+
+           <hr/>
 
 
-              <img class = "card-image-top" src = "{{ category.image.url }}" height = "100" width = "100" class="img-fluid" alt="Responsive image"/>
-              <div class="card-body">
-              <p class="card-text">{{ category.summary }}</p>
 
+          </div>
+          </div>
 
-          </div>-->
-
-          {% endfor %}
-
-  </main>
+        {%endfor%}
+</div>
 </div>
 {% endblock %}

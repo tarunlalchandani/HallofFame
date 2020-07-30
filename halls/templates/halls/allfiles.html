@@ -39,7 +39,7 @@ img {
            <div class="card-body">
                <h5 class="my-2"><a href="{{ f.attachment.url }}">{{ f.title }}</a></h5>
                <h5 class="my-2">{{ f.challenge }}</h5>
-               <a href="{% url 'delete_file' f.id %}" style="margin-bottom: 2%" class ='btn btn-danger' ">Delete</a>
+               <!--<a href="{% url 'delete_file' f.id %}" style="margin-bottom: 2%" class ='btn btn-danger' ">Delete</a>-->
                <a href="{% url 'update_file' f.id %}" class ='btn btn-success' ">Update</a>
 
            </div>

@@ -1,0 +1,25 @@
+{%extends 'halls/base.html'%}
+{% block content %}
+<div class = "container">
+<h2>Edit This Solution</h2>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% load bootstrap4 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript jquery='full' %}
+  {% load widget_tweaks %}
+
+  {% for field in form %}
+  <div class="form-group {% if field.errors %}alert-danger{% endif %}">
+    {{ field.errors }}
+    {{form.media}}
+    {{ field.label_tag }}
+    {% render_field field class="form-control" %}
+  </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+<a href="{% url 'delete_solution' solution.id %}" class="btn btn-danger">delete this Solution</a>
+</div>
+{% endblock %}

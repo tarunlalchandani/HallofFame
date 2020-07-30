@@ -10,7 +10,7 @@ int main(){
 	cin>>m>>pm;
 	cout<<"Enter the assignments mark and its percentage: ";
 	cin>>a>>pa;
-	cout<<"Enter the quizzes mark and its percentage: ";
+	cout<<"Enter the TimeBoundChallenges mark and its percentage: ";
 	cin>>q>>pq;
 	cout<<"Enter the final mark and its percentage: ";
 	cin>>f>>pf;

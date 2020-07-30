@@ -1,0 +1,40 @@
+{%extends 'halls/base2.html'%}
+{% block content %}
+<div class = "container">
+  <section id="portfolio" class="wow fadeInUp">
+    <div class="container">
+      <div class="section-header">
+        <h2>Add Payment</h2>
+        <p>Here you can add Payment for this Challenge</p>
+      </div>
+    </div>
+      <hr/>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% load bootstrap4 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript jquery='full' %}
+  {% load widget_tweaks %}
+
+  {% for field in form %}
+  <div class="form-group {% if field.errors %}alert-danger{% endif %}">
+    {{ field.errors }}
+    {{form.media}}
+    {{ field.label_tag }}
+    {% render_field field class="form-control" %}
+  </div>
+  {% endfor %}
+
+  <button type="submit" class="btn btn-primary">Add</button>
+</form>
+</section>
+</div>
+<button onclick='do'></button>
+  <script>
+  function do() {
+          document.getElementById('form').innerHTML ='add your form here'
+  }
+  </script>
+
+{% endblock %}

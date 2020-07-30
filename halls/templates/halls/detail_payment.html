@@ -1,0 +1,14 @@
+{%extends 'halls/base.html'%}
+{% block content %}
+<div class = "container">
+  <section id="portfolio" class="wow fadeInUp">
+    <div class="container">
+      <div class="section-header">
+        <h2>Payment</h2>
+        <p>{{payment.payment_details}}</p>
+        <p><a href="{{payment.payment_file.url}}"> {{payment.payment_file.url}} </a></p> 
+      </div>
+    </div>
+      <hr/>
+
+{% endblock %}

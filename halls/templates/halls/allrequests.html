@@ -1,0 +1,147 @@
+{%extends 'halls/base.html'%}
+{% block content %}
+<style>
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px; /* 5px rounded corners */
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+.container {
+  padding: 2px 16px;
+}
+.container {
+  padding: 2px 16px;
+}
+
+h1 {
+  text-align: center;
+  font-family: 'Roboto Condensed';
+  color: white;
+}
+
+#main {
+  height: 100px;
+  width: 1000px;
+  margin: auto;
+}
+  #search {
+    background-color: white;
+    margin: auto;
+    font-family: Arial;
+    margin-top: 0px;
+    opacity: 0.8;
+  }
+
+  .search_bar {
+    width: 550px;
+    height: 40px;
+    border: 0px;
+    margin: 0px;
+    font-size: 18px;
+    padding-left: 10px;
+  }
+
+  .search_submit {
+    width: 200px;
+    height: 42px;
+    margin: 0px;
+    border: 0px;
+    transition: width .5s, background-color 1s;
+    font-size: 18px;
+    background-color: lightgreen;
+    margin: -4px;
+  }
+
+  .search_submit:hover {
+    width: 300px;
+    background-color: lightgreen;
+  }
+
+/* Add rounded corners to the top left and the top right corner of the image */
+img {
+  border-radius: 5px 5px 0 0;
+}
+</style>
+<div class = "container">
+  <main role="main">
+
+
+
+
+
+
+<div class="text-center">
+  <h2 class='text-center'><b><strong>Welcome {{ user.username }}</strong></b></h2>
+  <h2 class='text-center'><u><strong>All Request Portal</strong></u></h2>
+  <h3>Requested Challenges</h3>
+</div>
+</main>
+</div>
+
+
+
+<div class = "container">
+  <main role="main">
+
+<div class="row">
+{% for r in allrequests.all %}
+
+<div class="col-lg-4 col-sm-6 mb-4" style="margin-top: 2%">
+   <div class="card shadow border-0 h-100">
+       <div class="card-body">
+           <h5 class="my-2">Tutor: {{r.tutorId}}_{{ r.tutorName }}</h5>
+           <h5 class="my_2">Challenge: {{r.challenge_id}}_{{r.challenge.title}}</h5>
+            <a href="{{r.whatsapp}}" class="btn btn-secondary">Chat</a>
+
+           <!--<a href="{% url 'delete_request' r.id %}" style="margin-bottom: 2%" class ='btn btn-danger' >Delete</a>-->
+           <!--<a href="{% url 'update_request' r.id %}" class ='btn btn-primary' >Update</a>-->
+           {%if r.completed %}
+           <br/>
+          <h5   class='badge badge-success'>Challenge Completed</h5>
+          {%else%}
+            {%if r.submitted%}
+            <a href="{%url 'seesolutions' r.id%}" class="btn btn-dark">Solutions</a>
+
+            <a href="{% url 'complete_request' pk=r.pk%}" class='btn btn-success'>Complete</a>
+            <a href="{%url 'reject_submitted_request' r.id%}" class="btn btn-danger">Reject Submitted Request</a>
+            {%endif%}
+           {%endif%}
+           {%if r.confirmed %}
+           {%if r.completed%}
+         {%else%}
+          <a href="{%url 'reject_confirmed_request' pk=r.pk%}" class='btn btn-warning'>Reject Confirmation</a>
+          {%endif%}
+          {%else%}
+          <a href="{%url 'detail_request' r.id%}" class="btn btn-dark" >Idea</a>
+           <a href="{% url 'confirm_request' pk=r.pk%}" class='btn btn-success'>Confirm</a>
+           {%endif%}
+           {%if r.payment_completed %}
+          <a href="{%url 'seepayments' r.id%}" class='btn btn-danger'>Transactions</a>
+          {%else%}
+          {%if r.completed%}
+          <a href="{%url 'seepayments' r.id%}" class="btn btn-dark" >Pay</a>
+
+           {%endif%}
+           {%endif%}
+       </div>
+   </div>
+</div>
+
+{% if forloop.counter|divisibleby:3 %}
+
+</div><!-- close existing row and open another one-->
+<div class="row">
+{% endif %}
+{% endfor %}
+</div>
+
+</main>
+</div>
+{% endblock %}

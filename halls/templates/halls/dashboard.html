@@ -1,6 +1,138 @@
-{%extends 'halls/base.html'%}
+{% extends 'halls/base2.html' %}
 {% block content %}
-<div class="container">
-DASHBOARD
+<style>
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px; /* 5px rounded corners */
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+.container {
+  padding: 2px 16px;
+}
+
+h1 {
+  text-align: center;
+  font-family: 'Roboto Condensed';
+  color: white;
+}
+
+#main {
+  height: 100px;
+  width: 1000px;
+  margin: auto;
+}
+  #search {
+    background-color: white;
+    margin: auto;
+    font-family: Arial;
+    margin-top: 0px;
+    opacity: 0.8;
+  }
+
+  .search_bar {
+    width: 550px;
+    height: 40px;
+    border: 0px;
+    margin: 0px;
+    font-size: 18px;
+    padding-left: 10px;
+  }
+
+  .search_submit {
+    width: 200px;
+    height: 42px;
+    margin: 0px;
+    border: 0px;
+    transition: width .5s, background-color 1s;
+    font-size: 18px;
+    background-color: lightgreen;
+    margin: -4px;
+  }
+
+  .search_submit:hover {
+    width: 300px;
+    background-color: lightgreen;
+  }
+</style>
+<div class = "container" >
+  <div class="text-center">
+    <h2 class='text-center'><b><strong>Welcome {{ user.username }}</strong></b></h2>
+    <h2 class='text-center'><u><strong>Dashboard</strong></u></h2>
+    <a href="https://wa.me/918541099563" class ='btn btn-primary' >For Doubts and Queries</a>
+    <a href="{% url 'allchallenges'%}" class ='btn btn-primary' >Request More Challenges</a>
+    <br/>
+    <hr/>
+
+<div class="text-center">
+<h3>Your Requested Challenges</h3>
+
+<div class = "container">
+  <section role="main">
+    <div class="section-header">
+      <h2>{{section_title}}</h2>
+    </div>
+    <div class ="row">
+      <br/>
+      <br/>
+    </div>
+
+    <div class="container">
+
+<div class="row">
+{% for request in requests %}
+<div class="col-lg-4 col-sm-6 mb-4" style="margin-top: 2%">
+   <div class="card shadow border-0 h-100">
+       <div class="card-body">
+
+
+           <h5 class="my-2"><a href="{% url 'seefiles' request.challenge.id %}">{{ request.challenge.title }}</a></h5>
+           <h5>{{ request.challenge.get_time_left }} remaining</h5>
+           <br/>
+           {%if request.completed %}
+           {%if request.payment_completed %}
+          <a href="{%url 'seepayments' request.id%}" class='btn btn-danger'>Transactions</a>
+           {%else%}
+           <h5><span class='badge badge-warning'>Payment Pending</span></h5>
+           {%endif%}
+           <h5><span class='badge badge-success'>Challenge Completed</span></h5>
+          {%else%}
+          {%if request.confirmed%}
+          <h5><span class='badge badge-success'>Request Confirmed</span></h5>
+          {%if user.is_tutor%}
+          <a href="{%url 'seesolutions' request.id%}" class="btn btn-dark">View or Add Solutions</a>
+          {%endif%}
+        
+
+          {%if user.is_employee%}
+          {%if request.submitted%}
+          <a href="{%url 'seesolutions' request.id%}" class="btn btn-dark">View Solutions</a>
+          {%endif%}
+          {%endif%}
+          {%else%}
+          <h5><span class="badge badge-warning">Request Pending</span></h5>
+          {%endif%}
+           {%endif%}
+
+
+       </div>
+   </div>
+</div>
+
+
+{% if forloop.counter|divisibleby:6 %}
+
+</div><!-- close existing row and open another one-->
+<div class="row">
+{% endif %}
+{% endfor %}
+</div>
+
 </div>
 {% endblock %}

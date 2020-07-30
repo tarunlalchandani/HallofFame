@@ -1,7 +1,15 @@
 {%extends 'halls/base.html'%}
 {% block content %}
 <div class = "container">
-<h2>Create Category of Challenges</h2>
+  <div class = "container">
+    <section id="portfolio" class="wow fadeInUp">
+      <div class="container">
+        <div class="section-header">
+          <h2>Create Category of Challenges</h2>
+          <p>Here you can create category of Challenges</p>
+        </div>
+      </div>
+        <hr/>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {% load widget_tweaks %}
@@ -15,5 +23,7 @@
   {% endfor %}
   <button type="submit" class="btn btn-primary">Create</button>
 </form>
+</section>
+</div>
 </div>
 {% endblock %}

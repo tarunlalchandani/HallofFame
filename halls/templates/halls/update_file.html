@@ -2,7 +2,7 @@
 {% block content %}
 <div class = "container">
 <h2>Edit This File</h2>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {% load bootstrap4 %}
   {% bootstrap_css %}
@@ -20,6 +20,6 @@
   <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
-<a href="{% url 'delete_file' file.id %}" class="btn btn-danger">delete this Category</a>
+<a href="{% url 'delete_file' file.id %}" class="btn btn-danger">delete this File</a>
 </div>
 {% endblock %}

@@ -1,0 +1,113 @@
+{%extends 'halls/base2.html'%}
+{% block content %}
+<style>
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px; /* 5px rounded corners */
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+.container {
+  padding: 2px 16px;
+}
+
+
+/* Add rounded corners to the top left and the top right corner of the image */
+img {
+  border-radius: 5px 5px 0 0;
+}
+</style>
+<div class = "container">
+  <section id="portfolio" class="wow fadeInUp">
+    <div class="container">
+      <div class="section-header">
+        <div class="row">
+
+          <h2>{{request.tutorName}}</h2>
+        </div>
+        <div>
+          <h5 float="right">Submit New Solution, View or add solutions</h5>
+          <hr/>
+          <div class="container">
+          <h5>Challenge: <a href="{%url 'seefiles' challenge.id%}" class="btn btn-link">{{challenge.title}}</a></h5>
+          </div>
+        </div>
+
+
+        <div class="container">
+        {%if user.is_employee %}
+
+        <br/>
+        <br/>
+        {%endif%}
+        {%if user.is_tutor%}
+        {%if request.completed%}
+        {%else%}
+          <a href="{%url 'submit_request' request.id%}" class="btn btn-danger">Submit Final</a>
+          <a href="{% url 'add_solution' pk=request.pk  %}" class ='btn btn-primary'>AddSolution</a>
+        {%endif%}
+        {%endif%}
+        {%if hidepayment%}
+          {% if submitted%}
+          <h5><span float="right" class="badge badge-warning" >Completion Pending</h5>
+          {% else %}
+          {%if user.is_tutor%}
+          <h5><span float="right" class="badge badge-info" >Please Submit the Solution ASAP</h5>
+          {%endif%}
+          {%endif%}
+        {%else%}
+        {%if request.payment_completed%}
+          <a  float="right" class="badge badge-success" >Payment Done</a>
+        {%else%}
+        {%if request.completed %}
+          <a  float="right" class="badge badge-warning" >Payment In Progress</a>
+        {%endif%}
+        {%endif%}
+        {%endif%}
+        </div>
+        </div>
+    </div>
+      <hr/>
+    <hr/>
+
+
+
+
+
+
+<div class="row">
+{% for s in solutions.all %}
+
+   <div class="col-lg-2 col-sm-3 mb-2" style="margin-top: 2%">
+       <div class="card shadow border-0 h-100">
+           <div class="card-body">
+             <h5 class="my-2">RequestId:Sol{{s.request.id}}</h5>
+             <h5 class="my-2">SolutionId:{{s.id}}</h5>
+               <a href="{% url 'detail_solution' s.id%}" class="btn btn-success">seedetails</a>
+               <h5 class="my-2"><a href="{{ s.solutionfile.url }}">{{ s.solutionfile.url}}</a></h5>
+               {%if user.is_employee%}
+               <!--<a href="{% url 'delete_solution' s.id %}" style="margin-bottom: 2%" class ='btn btn-danger' ">Delete</a>-->
+               {%endif%}
+               <a href="{% url 'update_solution' s.id %}" class ='btn btn-success' ">Update</a>
+
+           </div>
+       </div>
+   </div>
+
+{% if forloop.counter|divisibleby:6 %}
+
+</div><!-- close existing row and open another one-->
+<div class="row">
+{% endif %}
+{% endfor %}
+</div>
+
+</section>
+</div>
+{% endblock %}

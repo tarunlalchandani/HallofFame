@@ -1,4 +1,4 @@
-{%extends 'halls/base.html'%}
+{%extends 'halls/base2.html'%}
 {% block content %}
 <style>
   .card {
@@ -16,7 +16,19 @@
 .container {
   padding: 2px 16px;
 }
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  border-radius: 5px; /* 5px rounded corners */
+}
 
+/* On mouse-over, add a deeper shadow */
+
+h1 {
+text-align: center;
+font-family: 'Roboto Condensed';
+color: white;
+}
 
 /* Add rounded corners to the top left and the top right corner of the image */
 img {
@@ -24,58 +36,63 @@ img {
 }
 </style>
 <div class = "container">
-  <main role="main">
-    <div class="album py-5 bg-light">
+  <section id="portfolio" class="wow fadeInUp">
     <div class="container">
-    <div class="row">
-      <div class="col-md-4">
-      <h3>{{ challenge.title }}</h3>
+      <div class="section-header">
+        <div class="row">
 
+          <h2>{{ challenge.title }}</h2>
+        </div>
+        <div>
+          <h5 float="right"><b>Time Left:</b> {{challenge.get_time_left}}</h5>
+          {%if user.is_tutor%}
+          {%if hide%}
+            {% if requested %}
+            <h5 float="right"> <span class="badge badge-warning" >Request Pending</span></h5>
+            {% else %}
+            <a href="{%url 'request_challenge' pk=challenge.pk%}" float="right" class="btn btn-primary" >Request to Solve</a>
+            {% endif %}
+          {% else %}
+            <h5><span  float="right" class="badge badge-success" >Request Confirmed</span></h5>
+          {% endif %}
+          {%endif%}
 
-      <img src="{{ challenge.icon.url }}" height ='100' width ='300'class="img-fluid" alt="Responsive image"/>
-      </div>
-      <div class="col-md-8">
+          <hr/>
+          <div class="container">
+          <h4><b>Description</b></h4>
+          <h5>{{challenge.body}}</h5>
+          </div>
+        </div>
+
+        {%if user.is_employee %}
+        <div class="container">
+
         <br/>
         <br/>
-        <p>{{ challenge.body }}</p>
-        <p>Publication Date: {{challenge.pub_date}}</p>
-        <p><b> Deadline Date: {{challenge.deadline_date}} </b></p>
-
-      </div>
-    </div>
-    </div>
-    </div>
 
 
-    <div class="container">
-    <h3 class="text-center pt-3">All Available Files</h3>
-    {% if messages %}
-      <ul class="messages">
-        {% for message in messages %}
-        <li><h3 class="text center pt-3">{% if message.tags %} {% endif %}{{ message }}</h3></li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-    <a href="{% url 'add_file' pk=challenge.pk  %}" class ='btn btn-primary' ">AddFile</a>
-    <br/>
-    <br/>
-    <h4> Choose a file </h4>
+          <a href="{% url 'add_file' pk=challenge.pk  %}" class ='btn btn-primary'>AddFile</a>
+
+        </div>
+        {%endif%}
+        </div>
     </div>
+      <hr/>
     <hr/>
 
 
-
+{%if user.is_employee%}
 <div class="row">
 {% for f in files.all %}
 
    <div class="col-lg-2 col-sm-3 mb-2" style="margin-top: 2%">
        <div class="card shadow border-0 h-100">
            <div class="card-body">
-               <h5 class="my-2"><a href="{{ f.attachment.url }}">{{ f.title }}</a></h5>
-
-               <a href="{% url 'delete_file' f.id %}" style="margin-bottom: 2%" class ='btn btn-danger' ">Delete</a>
+               <h5 class="my-2"><a href="{{ f.attachment.url }}" target="_blank">{{ f.title }}</a></h5>
+               {%if user.is_employee%}
+               <!--<a href="{% url 'delete_file' f.id %}" style="margin-bottom: 2%" class ='btn btn-danger' ">Delete</a>-->
                <a href="{% url 'update_file' f.id %}" class ='btn btn-success' ">Update</a>
-
+               {%endif%}
            </div>
        </div>
    </div>
@@ -87,10 +104,124 @@ img {
 {% endif %}
 {% endfor %}
 </div>
+<hr/>
+{%endif%}
+
+{%if user.is_tutor%}
+{%if hide%}
+{%else%}
+<div class="row">
+{% for f in files.all %}
+
+   <div class="col-lg-2 col-sm-3 mb-2" style="margin-top: 2%">
+       <div class="card shadow border-0 h-100">
+           <div class="card-body">
+               <h5 class="my-2"><a href="{{ f.attachment.url }}">{{ f.title }}</a></h5>
+               {%if user.is_employee%}
+               <!--<a href="{% url 'delete_file' f.id %}" style="margin-bottom: 2%" class ='btn btn-danger' ">Delete</a>-->
+               <a href="{% url 'update_file' f.id %}" class ='btn btn-success' ">Update</a>
+               {%endif%}
+           </div>
+       </div>
+   </div>
+
+{% if forloop.counter|divisibleby:6 %}
+
+</div><!-- close existing row and open another one-->
+<div class="row">
+{% endif %}
+{% endfor %}
+</div>
+<hr/>
+{%endif%}
+{%endif%}
+{%if requested%}
+<div class="row">
+  <div class="col-lg-4 col-sm-6 mb-4" style="margin-top: 2%">
+      <div class="card shadow border-0 h-100">
+          <div class="card-body">
+          <h5>RequestId:Req{{current_request.id}}</h5>
+  <a href="{{current_request.whatsapp2}}" class="btn btn-primary">Chat For Help</a>
+  {%if hide%}
+  {%else%}
+  {%if user.is_tutor%}
+
+  <a href="{%url 'seesolutions' current_request.id%}" class="btn btn-dark">View or Add Solutions</a>
+  {%endif%}
+  {%if user.is_employee%}
+  {%if current_request.submitted%}
+  <a href="{%url 'seesolutions' current_request.id%}" class="btn btn-dark">View Solutions</a>
+  <a href="{%url 'seepayments' current_request.id%}" class="btn btn-success" >View Transactions</a>
+  {%endif%}
+  {%endif%}
+  {%if current_request.confirmed %}
+  <h5><span class="badge badge-secondary" >Request Confirmed</span></h5>
+  {%if current_request.completed%}
+  <h5><span class="badge badge-primary">Request Completed</span></h5>
+  {%if current_request.payment_completed%}
+  <h5><span class="badge badge-success">Request Paid</span></h5>
+  {%endif%}
+  {%endif%}
+</div>
+</div>
+</div>
+</div>
+  {%endif%}
+{%endif%}
+{%endif%}
+{%if user.is_employee%}
+<div class="row">
+
+{% for r in requests.all %}
+
+   <div class="col-lg-4 col-sm-6 mb-4" style="margin-top: 2%">
+       <div class="card shadow border-0 h-100">
+           <div class="card-body">
+               <h5>RequestId:Req{{r.id}}</h5>
+               <h5 class="my-2">Tutor: {{ r.tutorName }}</h5>
+               <h5 class="my_2">Challenge: {{r.challenge_id}}_{{r.challenge.title}}</h5>
+
+               <a href="{{r.whatsapp}}" class="btn btn-secondary">Chat</a>
 
 
 
+               <!--<a href="{% url 'delete_request' r.id %}" style="margin-bottom: 2%" class ='btn btn-danger' >Delete</a>-->
 
-</main>
+
+               {%if r.confirmed %}
+               {%if r.submitted%}
+                <a href="{%url 'seesolutions' r.id%}" class="btn btn-dark">View Solutions</a>
+               {%endif%}
+               {%if r.completed%}
+               {%else%}
+              <a href="{%url 'reject_confirmed_request' pk=r.pk%}" class='btn btn-warning'>Reject Confirmation</a>
+              {%endif%}
+              {%else%}
+               <a href="{% url 'confirm_request' pk=r.pk%}" class='btn btn-success'>Confirm</a>
+               {%endif%}
+               {%if r.completed %}
+              <h5><span class='btn btn-success'>Challenge Completed</span></h5>
+              {%else%}
+              {%if r.completed%}
+              {%else%}
+               <a href="{% url 'complete_request' pk=r.pk%}" class='btn btn-success'>Complete</a>
+               {%endif%}
+               {%endif%}
+
+
+           </div>
+       </div>
+   </div>
+
+{% if forloop.counter|divisibleby:3 %}
+
+</div><!-- close existing row and open another one-->
+<div class="row">
+{%endif%}
+{% endfor %}
+</div>
+{%endif%}
+
+</section>
 </div>
 {% endblock %}

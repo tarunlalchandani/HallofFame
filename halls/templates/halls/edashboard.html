@@ -2,8 +2,8 @@
 {% block content %}
 <div class = "container" >
   <div class="text-center">
-    <h1>Hare Krsna {{ user.username }}</h1>
-    <h2>Welcome to GoodGrades E-Dashboard</h2>
+    <h2 class='text-center'>HareKrsna {{ user.username }}</h2>
+    <h3>Welcome to GoodGrades E-Dashboard</h3>
     <a href="{% url 'create_hall'%}" class ='btn btn-primary' ">Create New Category of Challenges</a>
   </div>
 
@@ -15,11 +15,12 @@
      <div class="col-lg-4 col-sm-6 mb-4" style="margin-top: 2%">
          <div class="card shadow border-0 h-100">
              <div class="card-body">
+               {{hall.user}}
                  <h5 class="my-2"><a href="{% url 'seechallenges' hall.id %}">{{ hall.title }}</a></h5>
-                 <a href="{% url 'delete_hall' hall.id %}" class ='btn btn-danger' ">Delete</a>
+                 <!--<a href="{% url 'delete_hall' hall.id %}" class ='btn btn-danger' ">Delete</a>-->
                  <a href="{% url 'update_hall' hall.id %}" class ='btn btn-success' ">Update</a>
                  <br/>
-                
+
              </div>
          </div>
      </div>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+{%load static %}
+<html lang="en">
+<style type="text/css">
+  a:hover
+  {
+    color:#ff0000;
+  }
+</style>
+<head>
+  <meta charset="utf-8">
+  <title>GoodGrades</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <!-- Favicons -->
+  <link href="{%static 'images/favicon.png'%}" rel="icon">
+  <link href="{%static 'images/apple-touch-icon.png'%}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+  <link href="{%static 'halls/css/bootstrap.min.css'%}" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="{%static 'halls/css/font-awesome.min.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/animate.min.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/ionicons.min.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/owl.carousel.min.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/magnific-popup.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/ionicons.min.css'%}" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href="{%static 'halls/css/style.css'%}" rel="stylesheet">
+
+  <!-- =======================================================
+    Theme Name: Reveal
+    Theme URL: https://bootstrapmade.com/reveal-bootstrap-corporate-template/
+    Author: BootstrapMade.com
+    License: https://bootstrapmade.com/license/
+  ======================================================= -->
+</head>
+
+<body id="body">
+
+  <!--==========================
+    Top Bar
+  ============================-->
+  <section id="topbar" class="d-none d-lg-block">
+    <div class="container clearfix">
+      <div class="contact-info float-left">
+        <i class="fa fa-envelope-o"></i> <a href="mailto:good2grades@gmail.com">good2grades@gmail.com</a>
+        <i class="fa fa-phone"></i> +91 8541099563
+      </div>
+      <div class="social-links float-right">
+        <a href="https://www.facebook.com/good.grades.921" class="facebook"><i class="fa fa-facebook"></i></a>
+        <a href="https://www.instagram.com/good2grades/" class="instagram"><i class="fa fa-instagram"></i></a>
+        <a href="https://wa.me/918541099563"><img src="{%static 'halls/images/whatsapp.png'%}" height="20px" width="20px"/></a>
+      </div>
+    </div>
+  </section>
+
+  <!--==========================
+    Header
+  ============================-->
+  <header id="header">
+    <div class="container">
+
+      <div id="logo" class="pull-left">
+        <h1><a href="{%url 'home'%}" class="scrollto">Good<span>Grades</span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+         <a href="{%url 'home'%}"><img src="{%static 'images/logo.png'%}" alt="" title="" /></a>
+      </div>
+
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+
+            <li class="menu-active"><a href="{%url 'home'%}">Home</a></li>
+            {%if user.is_employee %}
+            <li class="menu-has-children"><a href="">Browse</a>
+              <ul>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="{%url 'allprojects'%}">Projects</a></li>
+                <li><a href="{%url 'allassignments'%}">Assignments</a></li>
+                <li><a href="{%url 'allTimeBoundChallenges'%}">TimeBoundChallenges</a></li>
+                <li><a  href="{%url 'allchallenges' %}">All Challenges</a></li>
+
+
+              </ul>
+            </li>
+            {%endif%}
+            {%if user.is_tutor%}
+
+            <li class="menu-has-children"><a href="">Browse</a>
+              <ul>
+                <li><a href="{%url 'allprojects'%}">Projects</a></li>
+                <li><a href="{%url 'allassignments'%}">Assignments</a></li>
+                <li><a href="{%url 'allTimeBoundChallenges'%}">TimeBoundChallenges</a></li>
+                <li><a  href="{%url 'allchallenges' %}">All Challenges</a></li>
+
+              </ul>
+            </li>
+
+            {%endif%}
+
+            {% if user.is_authenticated %}
+            {% if user.is_tutor%}
+            <li><a  href="{%url 'dashboard' %}">Dashboard</a></li>
+            {%endif%}
+            {%if user.is_employee%}
+            <li><a href="{%url 'edashboard'%}">E-Dashboard</a></li>
+            <li><a href="{%url 'allsolutions'%}">All Solutions </a></li>
+            <li><a  href="{%url 'allfiles' %}">All Files</a></li>
+            <li><a href="{%url 'allrequests' %}">All Requests</a></li>
+            <li><a href="{%url 'allpayments'%}">All Payments</a></li>
+            {%endif%}
+            <li><a  href="{%url 'account_logout' %}">Log Out</a></li>
+            {%if user.is_tutor %}
+              <li><a href="{%url 'profilepage' pk=user.pk %}"><img src = "{%static 'halls/images/user.png'%}" height="40px" width="40px"/></a></li>
+            {%endif%}
+
+            {% else %}
+            <li><a  href="{% url 'account_login' %}">Log In</a></li>
+            {% endif %}
+
+          </ul>
+      </nav><!-- #nav-menu-container -->
+    </div>
+  </header><!-- #header -->
+
+  <div class="container clearfixs">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+        <li><h3 class="badge badge-success">{% if message.tags %}{% endif %}{{ message }}</h3></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+  {% block content %}
+  {% endblock %}
+  <footer id="footer">
+    <div class="container">
+      <div class="copyright">
+        &copy; Copyright <strong>GoodGrades</strong>.
+      </div>
+      <div class="credits">
+        Designed by GoodGrades
+      </div>
+    </div>
+  </footer><!-- #footer -->
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+  <!-- JavaScript Libraries -->
+  <script src="{%static 'halls/js/jquery.min.js'%}"></script>
+  <script src="{%static 'halls/js/jquery-migrate.min.js'%}"></script>
+  <script src="{%static 'halls/js/bootstrap.bundle.min.js'%}"></script>
+  <script src="{%static 'halls/js/easing.min.js'%}"></script>
+  <script src="{%static 'halls/js/hoverIntent.js'%}"></script>
+  <script src="{%static 'halls/js/superfish.min.js'%}"></script>
+  <script src="{%static 'halls/js/wow.min.js'%}"></script>
+  <script src="{%static 'halls/js/owl.carousel.min.js'%}"></script>
+  <script src="{%static 'halls/js/magnific-popup.min.js'%}"></script>
+  <script src="{%static 'halls/js/sticky.js'%}"></script>
+
+
+
+  <!-- Template Main Javascript File -->
+  <script src="{%static 'halls/js/main.js'%}"></script>
+
+</body>
+</html>

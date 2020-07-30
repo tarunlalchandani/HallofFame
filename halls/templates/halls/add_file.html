@@ -1,7 +1,15 @@
 {%extends 'halls/base.html'%}
 {% block content %}
 <div class = "container">
-<h2>Add File</h2>
+  <section id="portfolio" class="wow fadeInUp">
+    <div class="container">
+      <div class="section-header">
+        <h2>Add File</h2>
+        <p>Here you can add files to the Challenge</p>
+      </div>
+    </div>
+      <hr/>
+
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {% load bootstrap4 %}
@@ -20,11 +28,13 @@
 
   <button type="submit" class="btn btn-primary">Add</button>
 </form>
+</section>
 </div>
-<button onclick='do'><button>
+<button onclick='do'></button>
   <script>
   function do() {
           document.getElementById('form').innerHTML ='add your form here'
   }
   </script>
+
 {% endblock %}

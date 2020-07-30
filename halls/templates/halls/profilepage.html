@@ -1,0 +1,64 @@
+{%extends 'halls/base2.html'%}
+{% block content %}
+{%load static%}
+<style>
+  .img-avatar {
+  height: 120px;
+  width: 120px;
+  margin: -60px auto 0 auto;
+}
+.star {
+  background: linear-gradient(to right,#fc3 {{profile.percentRating}},#ccc {{profile.percentRating}});
+  background-clip: text;
+  color: transparent;
+  font-size: 40px;
+  -webkit-background-clip: text;
+}
+</style>
+<div class="container">
+  <div class="text-center">
+    <img class="img-avatar rounded-circle" src="{%static 'halls/images/user.png'%}" />
+    <h1>{{profile.FirstName}}&nbsp{{profile.LastName}}</h1>
+    {%if profile.is_verified%}
+    <p class="btn btn-success">Verified</p>
+    {%else%}
+    {%if user.is_tutor%}
+    <a class="btn btn-danger" href="{% url 'allchallenges'%}">Solve More Questions to Enable Verification</a>
+    {%endif%}
+    {%endif%}
+  </div>
+  <div class="row">
+    <div class="col-md-5">
+  <div>
+    <span class="star" aria-hidden="true">★★★★★</span>
+    {%if user.is_tutor%}
+    <span><a href="{%url 'update_profile' pk=profile.pk%}" class="btn btn-primary">Edit Profile</a>
+    {%endif%}
+    </div>
+  <ul class="list-unstyled text-dark">
+    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i><b>WhatsappNumber:</b> {{profile.WhatsappNumber}}</li>
+    {%if user.is_employee%}
+    <li><i class="fas fa-link" aria-hidden="true"></i> <a href="#"><b>MoneyEarned:</b> {{profile.money_earned}}</a></li>
+    {%endif%}
+    <li><i class="far fa-calendar-alt" aria-hidden="true"></i><b>Skills:</b> {{profile.Skills}}</li>
+    <li><i class="far fa-calendar-alt" aria-hidden="true"></i><b>University:</b> {{profile.University}}</li>
+    <li><i class="far fa-calendar-alt" aria-hidden="true"></i><b>MajorBranchofStudy:</b> {{profile.Branch}}</li>
+    <li><i class="far fa-calendar-alt" aria-hidden="true"></i><b>YearsOfExperience:</b> {{profile.Year}}</li>
+    <li><i class="far fa-calendar-alt" aria-hidden="true" ></i><a href="{{profile.getresumeUrl}}" target="_blank" class="btn btn-success">Resume</a></li>
+  </ul>
+  </div>
+  <div class="col-md-7">
+    <br/>
+    <br/>
+    <ul class="list-unstyled text-dark">
+      <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i><b>AccountNumber:</b> {{profile.AccountNumber}}</li>
+      <li><i class="far fa-calendar-alt" aria-hidden="true"></i><b>BeneficiaryName:</b> {{profile.BeneficiaryName}}</li>
+      <li><i class="far fa-calendar-alt" aria-hidden="true"></i><b>IFSC:</b> {{profile.IFSC}}</li>
+      <li><i class="far fa-calendar-alt" aria-hidden="true"></i><b>UpiId:</b> {{profile.upiId}}</li>
+      <li><i class="far fa-calendar-alt" aria-hidden="true"></i><b>Bio:</b> {{profile.Other_Details}}</li>
+
+    </ul>
+    </div>
+    </div>
+</div>
+{% endblock %}

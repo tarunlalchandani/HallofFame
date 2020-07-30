@@ -1,46 +1,130 @@
-<!doctype html>
+<!DOCTYPE html>
+{%load static %}
 <html lang="en">
-{% load static %}
-
+<style type="text/css">
+  a:hover
+  {
+    color:#ff0000;
+  }
+</style>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>GoodGrades</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
 
+  <!-- Favicons -->
+  <link href="{%static 'images/favicon.png'%}" rel="icon">
+  <link href="{%static 'images/apple-touch-icon.png'%}" rel="apple-touch-icon">
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <link href="{%static 'main/gijgo.min.css' %}" rel="stylesheet">
-  <link rel="shortcut icon" type="image/png" href="{% static 'logo.png' %}" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+  <link href="{%static 'halls/css/bootstrap.min.css'%}" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="{%static 'halls/css/font-awesome.min.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/animate.min.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/ionicons.min.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/owl.carousel.min.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/magnific-popup.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/ionicons.min.css'%}" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href="{%static 'halls/css/style.css'%}" rel="stylesheet">
+
+  <!-- =======================================================
+    Theme Name: Reveal
+    Theme URL: https://bootstrapmade.com/reveal-bootstrap-corporate-template/
+    Author: BootstrapMade.com
+    License: https://bootstrapmade.com/license/
+  ======================================================= -->
 </head>
 
-<body>
-  <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 bg-white border-bottom shadow-sm">
-    <h5 class="my-0 mr-md-auto font-weight-normal"><img src = "{% static 'logo.png' %}" height="40" width="50" class="img-responsive"><a href="{% url 'home' %}" class="text-dark">GoodGrades</a></h5>
-    <nav class="my-2 my-md-0 mr-md-3">
-      {% if user.is_authenticated %}
-      <a class="p-2 text-dark" href="{%url 'edashboard' %}">E-Dashboard</a>
-      <a class="p-2 text-dark" href="{%url 'allchallenges' %}">All Challenges</a>
-      <a class="p-2 text-dark" href="{%url 'allfiles' %}">All Files</a>
-      <a class="p-2 text-dark" href="{%url 'logout' %}">Log Out</a>
-      {% else %}
-      <a class="p-2 text-dark" href="{% url 'login' %}">Log In</a>
-      {% endif %}
-    </nav>
-    {% if user.is_authenticated == False %}
-    <a class="btn btn-outline-primary" href="{% url 'signup' %}">Sign up</a>
+<body id="body">
+
+  <!--==========================
+    Top Bar
+  ============================-->
+  <section id="topbar" class="d-none d-lg-block">
+    <div class="container clearfix">
+      <div class="contact-info float-left">
+        <i class="fa fa-envelope-o"></i> <a href="mailto:good2grades@gmail.com">good2grades@gmail.com</a>
+        <i class="fa fa-phone"></i> +91 8541099563
+      </div>
+      <div class="social-links float-right">
+        <a href="https://www.facebook.com/good.grades.921" class="facebook"><i class="fa fa-facebook"></i></a>
+        <a href="https://www.instagram.com/good2grades/" class="instagram"><i class="fa fa-instagram"></i></a>
+        <a href="https://wa.me/918541099563"><img src="{%static 'halls/images/whatsapp.png'%}" height="20px" width="20px"/></a>
+      </div>
+    </div>
+  </section>
+
+  <!--==========================
+    Header
+  ============================-->
+  <header id="header">
+    <div class="container">
+
+      <div id="logo" class="pull-left">
+        <h1><a href="{%url 'home'%}" class="scrollto">Good<span>Grades</span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+         <a href="{%url 'home'%}"><img src="{%static 'images/logo.png'%}" alt="" title="" /></a>
+      </div>
+
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+          <li class="menu-active"><a href="{%url 'home'%}">Home</a></li>
+
+          {% if user.is_authenticated %}
+          <li><a  href="{%url 'edashboard' %}">E-Dashboard</a></li>
+          <li><a  href="{%url 'allchallenges' %}">All Challenges</a></li>
+          <li><a href="{%url 'allsolutions'%}">All Solutions </a></li>
+          <li><a  href="{%url 'allfiles' %}">All Files</a></li>
+          <li><a href="{%url 'allrequests' %}">All Requests</a></li>
+          <li><a href="{%url 'allpayments' %}">All Payments</a></li>
+          <li><a  href="{%url 'account_logout' %}">Log Out</a></li>
+          {% else %}
+          <li><a  href="{% url 'account_login' %}">Log In</a></li>
+          {% endif %}
+        </ul>
+      </nav><!-- #nav-menu-container -->
+    </div>
+  </header><!-- #header -->
+
+  <div class="container clearfixs">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+        <li><h3 class="badge badge-success">{% if message.tags %}{% endif %}{{ message }}</h3></li>
+        {% endfor %}
+      </ul>
     {% endif %}
   </div>
-
   {% block content %}
   {% endblock %}
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+  <!-- JavaScript Libraries -->
+  <script src="{%static 'halls/js/jquery.min.js'%}"></script>
+  <script src="{%static 'halls/js/jquery-migrate.min.js'%}"></script>
+  <script src="{%static 'halls/js/bootstrap.bundle.min.js'%}"></script>
+  <script src="{%static 'halls/js/easing.min.js'%}"></script>
+  <script src="{%static 'halls/js/hoverIntent.js'%}"></script>
+  <script src="{%static 'halls/js/superfish.min.js'%}"></script>
+  <script src="{%static 'halls/js/wow.min.js'%}"></script>
+  <script src="{%static 'halls/js/owl.carousel.min.js'%}"></script>
+  <script src="{%static 'halls/js/magnific-popup.min.js'%}"></script>
+  <script src="{%static 'halls/js/sticky.js'%}"></script>
+
+
+
+  <!-- Template Main Javascript File -->
+  <script src="{%static 'halls/js/main.js'%}"></script>
 
 </body>
-
 </html>

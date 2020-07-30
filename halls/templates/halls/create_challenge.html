@@ -1,7 +1,15 @@
 {%extends 'halls/base.html'%}
 {% block content %}
 <div class = "container">
-<h2>Create Challenge</h2>
+  <div class = "container">
+    <section id="portfolio" class="wow fadeInUp">
+      <div class="container">
+        <div class="section-header">
+          <h2>Create Challenge</h2>
+          <p>Here you can create a Challenge</p>
+        </div>
+      </div>
+        <hr/>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {% load bootstrap4 %}
@@ -17,8 +25,9 @@
     {% render_field field class="form-control" %}
   </div>
   {% endfor %}
-  </div>
   <button type="submit" class="btn btn-primary">Create</button>
 </form>
+</section>
+</div>
 </div>
 {% endblock %}

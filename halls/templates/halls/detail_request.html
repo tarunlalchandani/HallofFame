@@ -1,0 +1,24 @@
+{%extends 'halls/base.html'%}
+{% block content %}
+<div>
+  <section id="portfolio" class="wow fadeInUp">
+    <div class="container">
+      <div class="section-header">
+        <h2> Tutor: {{ request.tutorId }}_{{request.tutorName}}</h2>
+        <h2> TutorNumber: {{request.tutorNumber}}</h2>
+        <h3> Challenge: {{request.challenge.id}}_{{request.challenge.title}}</h3>
+        <a href="{%url 'see_profile' pk=request.tutorId%}" class="btn btn-primary">See Tutor's Profile</a>
+        <a href="{%url 'seefiles' request.challenge.id %}" class="btn btn-success">See Challenge Details</a>
+      </div>
+    </div>
+      <hr/>
+
+
+    <br/>
+    <div class="container">
+    <h4><b>SolvingIdea</b></h4>
+    <h5>{{request.HowToSolve}}</h5>
+    </div>
+    <br/>
+</div>
+{% endblock %}

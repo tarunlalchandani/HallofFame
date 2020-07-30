@@ -1,157 +1,487 @@
-{%extends 'halls/base.html'%}
-{% block content %}
-{%load static%}
-<section class="jumbotron text-center">
-  <div class = "container">
-    <h1>Gopidas Padakamalayor das das das anudas </h1>
-    <p class="load text-muted">You have all the top categories and it's time to solve them and earn money. Click the button to get started</p>
-    <a href="{% url 'create_hall' %}" class ='btn btn-primary' ">Create Your Category of Challenges</a>
-  </div>
-</section>
-<div class = "container">
-  <h1 class="text-center">Recent Categories</h1>
-  <div class="row">
- {% for hall in recent_category %}
+<!DOCTYPE html>
+{%load static %}
+<html lang="en">
+<style type="text/css">
+  a:hover
+  {
+    color:#ff0000;
+  }
+</style>
+<head>
+  <meta charset="utf-8">
+  <title>GoodGrades</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
 
-     <div class="col-lg-4 col-sm-6 mb-4" style="margin-top: 2%">
-         <div class="card shadow border-0 h-100">
-             <div class="card-body">
-                 <h5 class="my-2"><a href="{% url 'seechallenges' hall.id %}">{{ hall.title }}</a></h5>
-                 <a href="{% url 'delete_hall' hall.id %}" class ='btn btn-danger' ">Delete</a>
-                 <a href="{% url 'update_hall' hall.id %}" class ='btn btn-success' ">Update</a>
-                 <br/>
+  <!-- Favicons -->
+  <link href="{%static 'images/favicon.png'%}" rel="icon">
+  <link href="{%static 'images/apple-touch-icon.png'%}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+  <link href="{%static 'halls/css/bootstrap.min.css'%}" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="{%static 'halls/css/font-awesome.min.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/animate.min.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/ionicons.min.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/owl.carousel.min.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/magnific-popup.css'%}" rel="stylesheet">
+  <link href="{%static 'halls/css/ionicons.min.css'%}" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href="{%static 'halls/css/style.css'%}" rel="stylesheet">
+
+  <!-- =======================================================
+    Theme Name: Reveal
+    Theme URL: https://bootstrapmade.com/reveal-bootstrap-corporate-template/
+    Author: BootstrapMade.com
+    License: https://bootstrapmade.com/license/
+  ======================================================= -->
+</head>
+
+<body id="body">
+
+  <!--==========================
+    Top Bar
+  ============================-->
+  <section id="topbar" class="d-none d-lg-block">
+    <div class="container clearfix">
+      <div class="contact-info float-left">
+        <i class="fa fa-envelope-o"></i> <a href="mailto:good2grades@gmail.com">good2grades@gmail.com</a>
+        <i class="fa fa-phone"></i> +91 8541099563
+      </div>
+      <div class="social-links float-right">
+        <a href="https://www.facebook.com/good.grades.921" class="facebook"><i class="fa fa-facebook"></i></a>
+        <a href="https://www.instagram.com/good2grades/" class="instagram"><i class="fa fa-instagram"></i></a>
+        <a href="https://wa.me/918541099563"><img src="{%static 'halls/images/whatsapp.png'%}" height="20px" width="20px"/></a>
+
+      </div>
+    </div>
+  </section>
+
+  <!--==========================
+    Header
+  ============================-->
+  <header id="header">
+    <div class="container">
+
+      <div id="logo" class="pull-left">
+        <h1><a href="{%url 'home'%}" class="scrollto">Good<span>Grades</span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+         <a href="{%url 'home'%}"><img src="{%static 'images/logo.png'%}" alt="" title="" /></a>
+      </div>
+
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+          <li class="menu-active"><a href="{%url 'home'%}">Home</a></li>
+          {%if user.is_employee %}
+          <li class="menu-has-children"><a href="">Browse</a>
+            <ul>
+              <li><a href="#about">About Us</a></li>
+              <li><a href="{%url 'allprojects'%}">Projects</a></li>
+              <li><a href="{%url 'allassignments'%}">Assignments</a></li>
+              <li><a href="{%url 'allTimeBoundChallenges'%}">TimeBoundChallenges</a></li>
+              <li><a  href="{%url 'allchallenges' %}">All Challenges</a></li>
+              <li><a href="#services">Solving Arena</a></li>
+              <li><a href="#portfolio">All Categories</a></li>
+              <li><a href="#team">Recent Jobs</a></li>
+
+            </ul>
+          </li>
+          {%endif%}
+          {%if user.is_tutor%}
+
+          <li class="menu-has-children"><a href="">Browse</a>
+            <ul>
+              <li><a href="{%url 'allprojects'%}">Projects</a></li>
+              <li><a href="{%url 'allassignments'%}">Assignments</a></li>
+              <li><a href="{%url 'allTimeBoundChallenges'%}">TimeBoundChallenges</a></li>
+              <li><a  href="{%url 'allchallenges' %}">All Challenges</a></li>
+              <li><a href="#portfolio">All Categories</a></li>
+            </ul>
+          </li>
+          <li><a href="#about">About Us</a></li>
+
+          <li><a href="#services">Solving Arena</a></li>
+
+          <li><a href="#team">Recent Jobs</a></li>
+          {%endif%}
+
+          {% if user.is_authenticated %}
+          {% if user.is_tutor%}
+          <li><a  href="{%url 'dashboard' %}">Dashboard</a></li>
+          {%endif%}
+          {%if user.is_employee%}
+          <li><a href="{%url 'edashboard'%}">E-Dashboard</a></li>
+          <li><a href="{%url 'allsolutions'%}">All Solutions </a></li>
+          <li><a  href="{%url 'allfiles' %}">All Files</a></li>
+          <li><a href="{%url 'allrequests' %}">All Requests</a></li>
+          <li><a href="{%url 'allpayments' %}">All Payments</a></li>
+          {%endif%}
+          <li><a  href="{%url 'account_logout' %}">Log Out</a></li>
+          {%if user.is_tutor %}
+            <li><a href="{%url 'profilepage' pk=user.pk %}"><img src = "{%static 'halls/images/user.png'%}" height="40px" width="40px"/></a></li>
+          {%endif%}
+
+          {% else %}
+          <li><a  href="{% url 'account_login' %}">Log In</a></li>
+          {% endif %}
+
+        </ul>
+      </nav><!-- #nav-menu-container -->
+    </div>
+  </header><!-- #header -->
+  <div class="container clearfixs">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+        <li><h3 class="badge badge-success">{% if message.tags %}{% endif %}{{ message }}</h3></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+  <!--==========================
+    Intro Section
+  ============================-->
+  <section id="intro">
+
+    <div class="intro-content">
+      <h2>Join Us, <span>Solve Questions</span><br>&Earn Money!</h2>
+      <div>
+        <a href="{%url 'account_login'%}" class="btn-get-started scrollto">Get Started</a>
+        <a href="{%url 'allchallenges'%}" class="btn-projects scrollto">Our Challenges</a>
+      </div>
+    </div>
+
+    <!--<div id="intro-carousel" class="owl-carousel" >
+
+    </div>-->
+
+  </section><!-- #intro -->
+
+  <main id="main">
+
+    <!--==========================
+      About Section
+    ============================-->
+
+    <!--==========================
+      Services Section
+    ============================-->
+    <section id="services">
+      <div class="container">
+        <div class="section-header">
+          <h2>Solving Arena</h2>
+          <p>Tight your belt and fight with the Challenges and become <b>Successful</b></p>
+        </div>
+
+        <div class="row">
+
+          <div class="col-lg-6">
+            <div class="box wow fadeInLeft">
+              <div class="icon"><i class="fa fa-bar-chart"></i></div>
+              <h4 class="title"><a href="{%url 'allprojects'%}">Projects</a></h4>
+              <p class="description">You need to have stamina and patience to work on them, and submit before deadline to get your reward</p>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="box wow fadeInRight">
+              <div class="icon"><i class="fa fa-picture-o"></i></div>
+              <h4 class="title"><a href="{%url 'allTimeBoundChallenges' %}">TimeBoundChallenges</a></h4>
+              <p class="description">You will face a quiz of a short time mostly less than 1 hour but be really fast otherwise time may be over</p>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="box wow fadeInLeft" data-wow-delay="0.2s">
+              <div class="icon"><i class="fa fa-shopping-bag"></i></div>
+              <h4 class="title"><a href="{%url 'allassignments'%}">Assignments</a></h4>
+              <p class="description">These will not take your much time but you must submit it before deadline</p>
+            </div>
+          </div>
+
+
+
+        </div>
+
+      </div>
+    </section><!-- #services -->
+
+    <!--==========================
+      Clients Section
+    ============================-->
+
+
+    <!--==========================
+      Our Portfolio Section
+    ============================-->
+    <section id="portfolio" class="wow fadeInUp">
+      <div class="container">
+        <div class="section-header">
+          <h2>Start Solving a Category</h2>
+          <p>Here the Challenges are sorted according to the Category or Subject</p>
+        </div>
+      </div>
+
+      <div class="container-fluid">
+        <div class="row no-gutters">
+          <div class = "col-md-2">
+          </div>
+          {%for category in recent_category.all%}
+
+          <div class="col-lg-3 col-md-4">
+            <div class="portfolio-item wow fadeInUp">
+              <a href="{% url 'seechallenges' category.id %}" >
+                <img src="{{ category.image.url }}" height = "100px" width="120px" hspace="5px" vspace="5px" alt="">
+                <div class="portfolio-overlay">
+                  <div class="portfolio-info"><h2 class="wow fadeInUp">{{ category.title }}</h2></div>
+                </div>
+              </a>
+            </div>
+          </div>
+        {% if forloop.counter|divisibleby:3 %}
+
+        </div><!-- close existing row and open another one-->
+        <div class="row no-gutters">
+          <div class = "col-md-2">
+          </div>
+        {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+  </div>
+
+    </section><!-- #portfolio -->
+
+
+    <!--==========================
+      Call To Action Section
+    ============================-->
+    <section id="call-to-action" class="wow fadeInUp">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-9 text-center text-lg-left">
+            <a class="label label-success" id="check" href="{%url 'allchallenges'%}">Solve More Challenges to Enable it</a>
+            <h3 class="cta-title">Apply for Certification</h3>
+            <p class="cta-text"> By the score in this certification exam you will be priortized for a challenge, Assignment, Quiz or Project and You could solve Challenges without booking</p>
+          </div>
+          <div class="col-lg-3 cta-btn-container text-center">
+            <a class="cta-btn align-middle" href="#services">Come On!! Verify Yourself</a>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- #call-to-action -->
+
+    <!--==========================
+      Our Team Section
+    ============================-->
+    <section id="team" class="wow fadeInUp">
+      <div class="container">
+        <div class="section-header">
+          <h1><span class="badge badge-secondary ">Recent Jobs for You</span></h1>
+        </div>
+        <div class="section-header">
+          <a href="{%url 'allprojects'%}"><h2><strong><b><u> Projects </u></b></strong></h2></a>
+        <div>
+        <div class="row">
+          {%for challenge in recent_projects.all %}
+          <div class="col-lg-2 col-md-2">
+          <a href = "{%url 'seefiles' challenge.id %}"><h5 class="card-header"> {{ challenge.title }}</h5></a>
+          {%if user.is_employee %}
+          <a href="{% url 'add_file' pk=challenge.id  %}"><img src = "{% static 'add-file.png' %}" class='img-responsive' height="25" width="25"></a>
+          <!--<a href="{% url 'delete_challenge' challenge.id %}" ><img src = "{% static 'delete.png' %}" class='img-responsive' height="25" width="25"></a>-->
+          <a href="{% url 'update_challenge' challenge.id %}"><img src = "{% static 'update.png' %}" class='img-responsive' height="25" width="25"></a>
+          {%endif%}
+          <br/>
+
+          </div>
+          <div class="col-lg-2 col-md-2">
+          <div class="card-body">
+              {%if user.is_employee%}
+              <h5 class="card-title">Publication Date: {{challenge.pub_date}}</h5>
+              {%endif%}
+              <h5><b> Time Left: {{challenge.get_time_left}} </b></h5>
+              <br/>
+
+            </div>
+         </div>
+         <div class="col-lg-2 col-md-2">
+           <div class="container">
+             <div class="row">
+
 
              </div>
+             <div class="top-right">&nbsp &nbsp &nbsp<button type="button" class="label label-success" name="button"><b><u>Rs {{ challenge.stipend}} </u></b></button></div>
+
+
+
+
+
+            </div>
+          </div>
+
+          {%endfor%}
+        </div>
+        <div class="section-header">
+          <a href="{%url 'allassignments'%}"><h2><strong><b><u> Assignments </u></b></strong></h2></a>
+        <div>
+        <div class="row">
+          {%for challenge in recent_assignments.all %}
+          <div class="col-lg-2 col-md-2">
+          <a href = "{%url 'seefiles' challenge.id %}"><h5 class="card-header"> {{ challenge.title }}</h5></a>
+          {%if user.is_employee %}
+          <a href="{% url 'add_file' pk=challenge.id  %}"><img src = "{% static 'add-file.png' %}" class='img-responsive' height="25" width="25"></a>
+          <!--<a href="{% url 'delete_challenge' challenge.id %}" ><img src = "{% static 'delete.png' %}" class='img-responsive' height="25" width="25"></a>-->
+          <a href="{% url 'update_challenge' challenge.id %}"><img src = "{% static 'update.png' %}" class='img-responsive' height="25" width="25"></a>
+          {%endif%}
+          <br/>
+
+          </div>
+          <div class="col-lg-2 col-md-2">
+          <div class="card-body">
+              {%if user.is_employee%}
+              <h5 class="card-title">Publication Date: {{challenge.pub_date}}</h5>
+              {%endif%}
+              <h5><b> Time Left: {{challenge.get_time_left}} </b></h5>
+              <br/>
+
+            </div>
          </div>
-     </div>
-
-{% if forloop.counter|divisibleby:3 %}
-
-</div><!-- close existing row and open another one-->
-<div class="row">
-{% endif %}
- {% endfor %}
-</div>
-
-<div class = "container">
-  <h1 class="text-center">Recent Challenges</h1>
-{% for challenge in recent_challenges %}
-<div class="card">
-  <div class="row">
-    <div class="col-sm-4" >
-      <div class="row">
-        &nbsp &nbsp &nbsp
-    <a href="{%url 'seefiles' challenge.id %}"><h6 class="card-header"> {{ challenge.title }}</h6></a>
-    <a href="{% url 'add_file' pk=challenge.pk  %}"><img src = "{% static 'add-file.png' %}" class='img-responsive' height="25" width="25"></a>
-    <a href="{% url 'delete_challenge' challenge.id %}" ><img src = "{% static 'delete.png' %}" class='img-responsive' height="25" width="25"></a>
-    <a href="{% url 'update_challenge' challenge.id %}"><img src = "{% static 'update.png' %}" class='img-responsive' height="25" width="25"></a>
-    </div>
-    <br/>
-    &nbsp &nbsp
-    <img src="{{ challenge.icon.url }}" alt="Avatar" height ="100" width="200" class="img-fluid" alt="Responsive image"/>
-    &nbsp &nbsp
-    <p class="card-title"><i>Category: {{challenge.hall}}</i></p>
-    </div>
-    <div class="col-sm-5">
-    <div class="card-body">
-
-        <p class="card-text">{{ challenge.summary }}</p>
-        <br/>
-
-      </div>
-   </div>
-   <div class="col-sm-3">
-     <div class="container">
-       <div class="row">
-         &nbsp &nbsp &nbsp
-       <img src="{%static 'coin.png' %}" height="80" width="80">
-
-       </div>
-       <div class="top-right">&nbsp &nbsp<button type="button" class="btn btn-success" name="button"><b><u>{{ challenge.stipend}} </u></b></button></div>
-
-       <hr/>
-       <p><b> Deadline Date: {{challenge.deadline_date}} </b></p>
+         <div class="col-lg-2 col-md-2">
+           <div class="container">
+             <div class="row">
 
 
-      </div>
-    </div>
-
- </div>
- </div>
- <br/>
- <br/>
-<!--<div class="container">
+             </div>
+             <div class="top-right">&nbsp &nbsp &nbsp<button type="button" class="label label-success" name="button"><b><u>Rs {{ challenge.stipend}} </u></b></button></div>
 
 
-    <img class = "card-image-top" src = "{{ category.image.url }}" height = "100" width = "100" class="img-fluid" alt="Responsive image"/>
-    <div class="card-body">
-    <p class="card-text">{{ category.summary }}</p>
 
 
-</div>-->
 
-{% endfor %}
-</div>
+            </div>
+          </div>
 
+          {%endfor%}
+        </div>
+        <div class="section-header">
+          <a href="{%url 'allTimeBoundChallenges'%}"><h2><strong><b><u> TimeBoundChallenges </u></b></strong></h2></a>
+        <div>
+        <div class="row">
+          {%for challenge in recent_TimeBoundChallenges.all %}
+          <div class="col-lg-2 col-md-2">
+          <a href = "{%url 'seefiles' challenge.id %}"><h5 class="card-header"> {{ challenge.title }}</h5></a>
+          {%if user.is_employee %}
+          <a href="{% url 'add_file' pk=challenge.id  %}"><img src = "{% static 'add-file.png' %}" class='img-responsive' height="25" width="25"></a>
+          <a href="{% url 'delete_challenge' challenge.id %}" ><img src = "{% static 'delete.png' %}" class='img-responsive' height="25" width="25"></a>
+          <a href="{% url 'update_challenge' challenge.id %}"><img src = "{% static 'update.png' %}" class='img-responsive' height="25" width="25"></a>
+          {%endif%}
+          <br/>
 
-<div class = "container">
-  <h1 class="text-center">Deadline Challenges</h1>
-{% for challenge in deadline_challenges %}
-<div class="card">
-  <div class="row">
-    <div class="col-sm-4" >
-      <div class="row">
-        &nbsp &nbsp &nbsp
-    <a href="{%url 'seefiles' challenge.id %}"><h6 class="card-header"> {{ challenge.title }}</h6></a>
-    <a href="{% url 'add_file' pk=challenge.pk  %}"><img src = "{% static 'add-file.png' %}" class='img-responsive' height="25" width="25"></a>
-    <a href="{% url 'delete_challenge' challenge.id %}" ><img src = "{% static 'delete.png' %}" class='img-responsive' height="25" width="25"></a>
-    <a href="{% url 'update_challenge' challenge.id %}"><img src = "{% static 'update.png' %}" class='img-responsive' height="25" width="25"></a>
-    </div>
-    <br/>
-    &nbsp &nbsp
-    <img src="{{ challenge.icon.url }}" alt="Avatar" height ="100" width="200" class="img-fluid" alt="Responsive image"/>
-    &nbsp &nbsp
-    <p class="card-title"><i>Category: {{challenge.hall}}</i></p>
-    </div>
-    <div class="col-sm-5">
-    <div class="card-body">
+          </div>
+          <div class="col-lg-2 col-md-2">
+          <div class="card-body">
+              {%if user.is_employee%}
+              <h5 class="card-title">Publication Date: {{challenge.pub_date}}</h5>
+              {%endif%}
+              <h5><b> Time Left: {{challenge.get_time_left}} </b></h5>
+              <br/>
 
-        <p class="card-text">{{ challenge.summary }}</p>
-        <br/>
-
-      </div>
-   </div>
-   <div class="col-sm-3">
-     <div class="container">
-       <div class="row">
-         &nbsp &nbsp &nbsp
-       <img src="{%static 'coin.png' %}" height="80" width="80">
-
-       </div>
-       <div class="top-right">&nbsp &nbsp<button type="button" class="btn btn-success" name="button"><b><u>{{ challenge.stipend}} </u></b></button></div>
-
-       <hr/>
-       <p><b> Deadline Date: {{challenge.deadline_date}} </b></p>
+            </div>
+         </div>
+         <div class="col-lg-2 col-md-2">
+           <div class="container">
+             <div class="row">
 
 
+             </div>
+             <div class="top-right">&nbsp &nbsp &nbsp<button type="button" class="label label-success" name="button"><b><u>Rs {{ challenge.stipend}} </u></b></button></div>
+
+
+
+
+            </div>
+          </div>
+
+          {%endfor%}
+        </div>
       </div>
     </div>
 
- </div>
- </div>
- <br/>
- <br/>
-<!--<div class="container">
+    </section><!-- #team -->
+
+    <section id="about" class="wow fadeInUp">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 about-img">
+            <img src="{%static 'halls/images/GGHome.png'%}" alt="">
+          </div>
+
+          <div class="col-lg-6 content">
+            <br/>
+            <br/>
+            <h2>Earn Unlimitedly from Home with GoodGrades</h2>
+            <h3>GoodGrades provide challenges and respective stipend associated with it. The more you solve, You increase your skills, as well as earn money</h3>
+
+            <ul>
+              <li><i class="ion-android-checkmark-circle"></i>Connect with us and become <b>Trustworthy</b> and <b>Recognized</b> tutor </li>
+              <li><i class="ion-android-checkmark-circle"></i> Solve Challenges, Projects and Assignments and showcase your skills to the world</li>
+              <li><i class="ion-android-checkmark-circle"></i>Earn Money Unlimitedly as there is no limit of challenges for you</li>
+            </ul>
+
+          </div>
+        </div>
+
+      </div>
+    </section><!-- #about -->
 
 
-    <img class = "card-image-top" src = "{{ category.image.url }}" height = "100" width = "100" class="img-fluid" alt="Responsive image"/>
-    <div class="card-body">
-    <p class="card-text">{{ category.summary }}</p>
+  </main>
+
+  <!--==========================
+    Footer
+  ============================-->
+  <footer id="footer">
+    <div class="container">
+      <div class="copyright">
+        &copy; Copyright <strong>GoodGrades</strong>.
+      </div>
+      <div class="credits">
+        <!--
+          All the links in the footer should remain intact.
+          You can delete the links only if you purchased the pro version.
+          Licensing information: https://bootstrapmade.com/license/
+          Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=Reveal
+        -->
+        Designed by GoodGrades
+      </div>
+    </div>
+  </footer><!-- #footer -->
+
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+  <!-- JavaScript Libraries -->
+  <script src="{%static 'halls/js/jquery.min.js'%}"></script>
+  <script src="{%static 'halls/js/jquery-migrate.min.js'%}"></script>
+  <script src="{%static 'halls/js/bootstrap.bundle.min.js'%}"></script>
+  <script src="{%static 'halls/js/easing.min.js'%}"></script>
+  <script src="{%static 'halls/js/hoverIntent.js'%}"></script>
+  <script src="{%static 'halls/js/superfish.min.js'%}"></script>
+  <script src="{%static 'halls/js/wow.min.js'%}"></script>
+  <script src="{%static 'halls/js/owl.carousel.min.js'%}"></script>
+  <script src="{%static 'halls/js/magnific-popup.min.js'%}"></script>
+  <script src="{%static 'halls/js/sticky.js'%}"></script>
 
 
-</div>-->
 
-{% endfor %}
-</div>
-</div>
-{% endblock %}
+  <!-- Template Main Javascript File -->
+  <script src="{%static 'halls/js/main.js'%}"></script>
+
+</body>
+</html>
